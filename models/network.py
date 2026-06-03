@@ -230,16 +230,23 @@ def resnet50(pretrained=False, **kwargs):
         model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
     return model
 
+def CIFAR_ResNet18(num_classes=100):
+    return CIFAR_ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes)
+
 def get_network(args):
-    if args.data_type == 'imagenet': 
+    if args.data_type == 'imagenet':
         if args.classifier_type == 'ResNet50':
-            net = resnet50()    
+            net = resnet50()
+        else:
+            raise NotImplementedError
+    elif args.data_type in ('cifar100', 'cifar10'):
+        num_classes = 100 if args.data_type == 'cifar100' else 10
+        if args.classifier_type == 'ResNet18':
+            net = CIFAR_ResNet18(num_classes=num_classes)
         else:
             raise NotImplementedError
     else:
-        raise NotImplementedError  
- 
+        raise NotImplementedError
+
     print(C.underline(C.yellow("[Info] Building model: {}".format(args.classifier_type))))
-
-
     return net

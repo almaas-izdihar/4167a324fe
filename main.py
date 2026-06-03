@@ -254,6 +254,8 @@ def train(all_predictions,
             outputs_T = now_predictions[input_indices]
             outputs_T = outputs_T.cuda()
             outputs_S = net(inputs)
+            if isinstance(outputs_S, list):
+                outputs_S = outputs_S[0][0]
             loss = criterion_CE(outputs_S, targets)
             if epoch != 0 :
                 _, mixup_loss = Mixup(net, inputs, targets, criterion_CE, alpha=0.4)
@@ -269,6 +271,8 @@ def train(all_predictions,
                 gathered_indices = torch.cat(gathered_indices, dim=0)
         else:
             outputs_S = net(inputs)
+            if isinstance(outputs_S, list):
+                outputs_S = outputs_S[0][0]
             loss = criterion_CE(outputs_S, targets)
         train_losses.update(loss.item(), inputs.size(0))
         err1, err5 = accuracy(outputs_S.data, targets, topk=(1, 5))
@@ -323,6 +327,8 @@ def val(criterion_CE,
             targets_numpy = targets.cpu().numpy()
             targets_list.extend(targets_numpy.tolist())
             outputs = net(inputs)
+            if isinstance(outputs, list):
+                outputs = outputs[0][0]
             softmax_predictions = F.softmax(outputs, dim=1)
             softmax_predictions = softmax_predictions.cpu().numpy()
             for values_ in softmax_predictions:
