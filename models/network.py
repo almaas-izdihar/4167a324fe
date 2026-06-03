@@ -194,7 +194,13 @@ class CIFAR_ResNet(nn.Module):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
         for stride in strides:
-            layers.append(block(self.in_planes, planes, stride))
+            downsample = None
+            if stride != 1 or self.in_planes != planes * block.expansion:
+                downsample = nn.Sequential(
+                    conv1x1(self.in_planes, planes * block.expansion, stride),
+                    nn.BatchNorm2d(planes * block.expansion),
+                )
+            layers.append(block(self.in_planes, planes, stride, downsample))
             self.in_planes = planes * block.expansion
         return nn.Sequential(*layers)
     def forward(self, x, lin=0, lout=5):
