@@ -49,6 +49,13 @@ def parse_args():
     parser.add_argument('--resume', type=str, default=None)
     parser.add_argument('--beta', default=1.0, type=float)
     parser.add_argument('--seed', default=2024, type=int)
+    # Gap 1: confidence-filtered EMA buffer update
+    parser.add_argument('--conf_gate', action='store_true')
+    parser.add_argument('--tau_start', default=0.5, type=float)
+    parser.add_argument('--tau_end', default=0.0, type=float)
+    # Gap 2: adaptive beta warm-up
+    parser.add_argument('--adaptive_beta', action='store_true')
+    parser.add_argument('--beta_start', default=0.1, type=float)
     args = parser.parse_args()
     random.seed(args.seed)
     np.random.seed(args.seed)
@@ -289,7 +296,30 @@ def train(all_predictions,
                 for jdx in range(len(gathered_prediction)):
                     now_predictions[gathered_indices[jdx]] = gathered_prediction[jdx].detach()
             else:
-                now_predictions[input_indices] = outputs_S.cpu().detach() * args.beta + now_predictions[input_indices] * (1-args.beta)
+                outputs_cpu = outputs_S.cpu().detach()
+                # Gap 2: adaptive β — linearly warm up from beta_start to beta
+                if args.adaptive_beta:
+                    frac = epoch / max(args.end_epoch - 1, 1)
+                    current_beta = args.beta_start + (args.beta - args.beta_start) * frac
+                else:
+                    current_beta = args.beta
+                # Gap 1: confidence gate — only update buffer if max prob > tau_t
+                if args.conf_gate:
+                    frac = epoch / max(args.end_epoch - 1, 1)
+                    tau_t = args.tau_start + (args.tau_end - args.tau_start) * frac
+                    conf = F.softmax(outputs_cpu, dim=1).max(dim=1).values
+                    mask = conf > tau_t
+                    idx_pass = input_indices[mask]
+                    if len(idx_pass) > 0:
+                        now_predictions[idx_pass] = (
+                            outputs_cpu[mask] * current_beta
+                            + now_predictions[idx_pass] * (1 - current_beta)
+                        )
+                else:
+                    now_predictions[input_indices] = (
+                        outputs_cpu * current_beta
+                        + now_predictions[input_indices] * (1 - current_beta)
+                    )
         progress_bar(epoch,batch_idx, len(train_loader), args, 'lr: {:.1e} |  loss: {:.3f} | top1_acc: {:.3f} | top5_acc: {:.3f} | correct/total({}/{})'.format(
             current_LR, train_losses.avg, train_top1.avg, train_top5.avg, correct, total))
     if args.distributed:
