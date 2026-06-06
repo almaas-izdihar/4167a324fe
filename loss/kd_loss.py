@@ -20,10 +20,11 @@ class KD(nn.Module):
 
 
 
-def RefineLoss(targets, student, teacher):
+def RefineLoss(targets, student, teacher, temperature=3.0):
     K = student.size(1)
-    pred_student = F.softmax(student, dim=1)
-    pred_teacher = F.softmax(teacher, dim=1)
+    # Eq. 10 uses p̃, b̃ (τ-scaled softmax) — fix R1
+    pred_student = F.softmax(student / temperature, dim=1)
+    pred_teacher = F.softmax(teacher / temperature, dim=1)
     # w=1 for correct class, w=1/(K-1) for wrong classes (Eq. 10-11)
     weights = student.new_full(student.size(), 1.0 / (K - 1))
     weights.scatter_(1, targets.view(-1, 1), 1.0)
