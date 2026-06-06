@@ -85,7 +85,7 @@ class Bottleneck(nn.Module):
 class PreActBlock(nn.Module):
     '''Pre-activation version of the BasicBlock.'''
     expansion = 1
-    def __init__(self, in_planes, planes, stride=1):
+    def __init__(self, in_planes, planes, stride=1, downsample=None):
         super(PreActBlock, self).__init__()
         self.bn1 = nn.BatchNorm2d(in_planes)
         self.conv1 = conv3x3(in_planes, planes, stride)
@@ -237,7 +237,7 @@ def resnet50(pretrained=False, **kwargs):
     return model
 
 def CIFAR_ResNet18(num_classes=100):
-    return CIFAR_ResNet(BasicBlock, [2, 2, 2, 2], num_classes=num_classes)
+    return CIFAR_ResNet(PreActBlock, [2, 2, 2, 2], num_classes=num_classes)
 
 def get_network(args):
     if args.data_type == 'imagenet':

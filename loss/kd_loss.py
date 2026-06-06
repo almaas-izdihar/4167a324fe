@@ -21,12 +21,13 @@ class KD(nn.Module):
 
 
 def RefineLoss(targets, student, teacher):
+    K = student.size(1)
     pred_student = F.softmax(student, dim=1)
     pred_teacher = F.softmax(teacher, dim=1)
-    targets_one_hot = student.new(student.size(0), student.size(1)).fill_(0)
-    ids = targets.view(-1, 1)
-    targets_one_hot.scatter_(1, ids.data, 1)
-    loss = (targets_one_hot * F.relu(pred_teacher - pred_student)).sum(1).mean()
+    # w=1 for correct class, w=1/(K-1) for wrong classes (Eq. 10-11)
+    weights = student.new_full(student.size(), 1.0 / (K - 1))
+    weights.scatter_(1, targets.view(-1, 1), 1.0)
+    loss = (weights * F.relu(pred_teacher - pred_student)).sum(1).mean()
     return loss
 
 import os
@@ -41,28 +42,24 @@ import torch.nn.functional as F
 import torch.nn.init as init
 
 
-def mixup_data(x, y, alpha=0.4):
-    '''Returns mixed inputs, pairs of targets, and lambda'''
-    if alpha > 0:
-        lam = np.random.beta(alpha, alpha)
-    else:
-        lam = 0.5
+def mixup_data(x, alpha=0.4):
+    lam = np.random.beta(alpha, alpha) if alpha > 0 else 0.5
+    index = torch.randperm(x.size(0)).cuda()
+    mixed_x = lam * x + (1 - lam) * x[index]
+    return mixed_x, lam, index
 
-    batch_size = x.size()[0]
-    index = torch.randperm(batch_size).cuda()
-
-    mixed_x = lam * x + (1 - lam) * x[index, :]
-    y_a, y_b = y, y[index]
-
-    return mixed_x, y_a, y_b, lam, index
-
-def Mixup(net, inputs, targets, criterion_cls, alpha):
-    mixed_x, y_a, y_b, lam_mixup, _ = mixup_data(inputs, targets, alpha=alpha)
+def Mixup(net, inputs, outputs_student, temperature, alpha):
+    """L_KD2 (Eq. 9): τ²·KL(f(x̂)/τ ∥ (1-λ)·p(x)/τ + λ·p(x')/τ)"""
+    mixed_x, lam, index = mixup_data(inputs, alpha=alpha)
     logit = net(mixed_x)
     if isinstance(logit, list):
         logit = logit[0][0]
     elif isinstance(logit, tuple):
         logit = logit[0]
-    loss = criterion_cls(logit, y_a) * lam_mixup + criterion_cls(logit, y_b) * (1. - lam_mixup)
+    soft_x  = F.softmax(outputs_student.detach() / temperature, dim=1)
+    soft_xp = F.softmax(outputs_student.detach()[index] / temperature, dim=1)
+    soft_teacher = (1 - lam) * soft_x + lam * soft_xp
+    log_pred = F.log_softmax(logit / temperature, dim=1)
+    loss = F.kl_div(log_pred, soft_teacher, reduction='batchmean') * (temperature ** 2)
     return logit, loss
 

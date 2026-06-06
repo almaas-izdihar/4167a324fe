@@ -258,7 +258,7 @@ def train(all_predictions,
                 outputs_S = outputs_S[0][0]
             loss = criterion_CE(outputs_S, targets)
             if epoch != 0 :
-                _, mixup_loss = Mixup(net, inputs, targets, criterion_CE, alpha=0.4)
+                _, mixup_loss = Mixup(net, inputs, outputs_S, 3.0, alpha=0.4)
                 loss += mixup_loss
                 loss += criterion_KD(outputs_S, outputs_T, 3.0) * 9.0 * args.weight
                 loss += RefineLoss(targets, outputs_S, outputs_T) * args.weight2
