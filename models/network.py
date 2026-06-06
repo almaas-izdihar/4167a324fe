@@ -173,9 +173,8 @@ class ResNet(nn.Module):
         prob = self.fc(x)
         return prob
 class CIFAR_ResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10, bias=True, upsample=None):
+    def __init__(self, block, num_blocks, num_classes=10, bias=True):
         super(CIFAR_ResNet, self).__init__()
-        self.upsample=upsample
         self.in_planes = 64
         self.conv1 = conv3x3(3, 64)
         self.bn1 = nn.BatchNorm2d(64)
@@ -186,10 +185,6 @@ class CIFAR_ResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
         self.gap = nn.AvgPool2d(4)
         self.linear = nn.Linear(512*block.expansion, num_classes, bias=bias)
-        self.gap3 = nn.AvgPool2d(8)
-        self.linear3 = nn.Linear(256, num_classes, bias=bias)
-        self.gap2 = nn.AvgPool2d(16)
-        self.linear2 = nn.Linear(128, num_classes, bias=bias)
     def _make_layer(self, block, planes, num_blocks, stride):
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
@@ -203,33 +198,17 @@ class CIFAR_ResNet(nn.Module):
             layers.append(block(self.in_planes, planes, stride, downsample))
             self.in_planes = planes * block.expansion
         return nn.Sequential(*layers)
-    def forward(self, x, lin=0, lout=5):
-        out = x
-        out = self.conv1(out)
+    def forward(self, x):
+        out = self.conv1(x)
         out = self.bn1(out)
         out = self.relu(out)
-        out1 = self.layer1(out)
-        out2 = self.layer2(out1)
-        out3 = self.layer3(out2)
-        out = self.layer4(out3)
-        def get_dense_info(featmap, linear, gap):
-            if hasattr(self, 'upsample') and self.upsample:
-                tmp = F.upsample(featmap, scale_factor=2., mode=self.upsample)
-            else:
-                tmp = featmap
-            n, c, h, w = tmp.size()
-            dense_logits = linear(tmp.permute(0, 2, 3, 1).reshape(
-                n*h*w, c)).reshape(n, h*w, -1).argmax(axis=2)
-            feat = gap(featmap)
-            feat = feat.view(featmap.size(0), -1)
-            naive_logit = linear(feat)
-            return naive_logit, feat, dense_logits
-        logit_2, feat_2, dense_logits_2 = get_dense_info(out2, self.linear2, self.gap2)
-        logit_3, feat_3, dense_logits_3 = get_dense_info(out3, self.linear3, self.gap3)
-        del out2
-        del out3
-        logit_final, feat_final, dense_logits_final = get_dense_info(out, self.linear, self.gap)
-        return [(logit_final, feat_final, dense_logits_final), (logit_3, feat_3, dense_logits_3), (logit_2, feat_2, dense_logits_2)]
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+        out = self.gap(out)
+        out = out.view(out.size(0), -1)
+        return self.linear(out)
 def resnet50(pretrained=False, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
