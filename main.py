@@ -26,7 +26,7 @@ def parse_args():
     parser.add_argument('--experiment_type', default='exp',type=str)
     parser.add_argument('--lr', default=0.1, type=float)
     parser.add_argument('--weight', default=4.0, type=float)
-    parser.add_argument('--weight2', default=1.0, type=float)
+    parser.add_argument('--weight2', default=4.0, type=float)
     parser.add_argument('--lr_decay_rate', default=0.1, type=float)
     parser.add_argument('--lr_decay_schedule', default=[100, 150], nargs='*', type=int)
     parser.add_argument('--weight_decay', default=1e-4, type=float)
@@ -259,7 +259,7 @@ def train(all_predictions,
             loss = criterion_CE(outputs_S, targets)
             if epoch != 0 :
                 _, mixup_loss = Mixup(net, inputs, outputs_S, 3.0, alpha=0.4)
-                loss += mixup_loss
+                loss += mixup_loss * args.weight
                 loss += criterion_KD(outputs_S, outputs_T, 3.0) * 9.0 * args.weight
                 loss += RefineLoss(targets, outputs_S, outputs_T) * args.weight2
             if args.distributed:
