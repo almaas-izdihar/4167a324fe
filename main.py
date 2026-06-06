@@ -60,7 +60,12 @@ def parse_args():
     torch.cuda.manual_seed_all(args.seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
-    torch.use_deterministic_algorithms(True, warn_only=True)
+    try:
+        torch.use_deterministic_algorithms(True, warn_only=True)
+    except TypeError:
+        torch.use_deterministic_algorithms(True)
+    except Exception:
+        pass
     return check_args(args)
 def check_args(args):
     try:
