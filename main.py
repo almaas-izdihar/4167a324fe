@@ -174,7 +174,7 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
             checkpoint = torch.load(args.resume, map_location=loc)
         args.start_epoch = checkpoint['epoch'] + 1 
         best_acc = checkpoint['best_acc']
-        all_predictions = checkpoint['prev_predictions'].cpu()
+        now_predictions = checkpoint['prev_predictions'].cpu()
         net.load_state_dict(checkpoint['net'])
         optimizer.load_state_dict(checkpoint['optimizer'])
         print(C.green("[!] [Rank {}] Model loaded".format(args.rank)))
@@ -207,7 +207,7 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
                     'epoch': epoch,
                     'best_acc' : best_acc,
                     'accuracy' : acc,
-                    'prev_predictions': all_predictions
+                    'prev_predictions': now_predictions
                     }
         if acc > best_acc:
             best_acc = acc
@@ -240,6 +240,8 @@ def train(all_predictions,
     total = 0
     net.train()
     current_LR = get_learning_rate(optimizer)[0]
+    # per-epoch snapshot so all batches read the same frozen teacher buffer (Eq. 3)
+    teacher_snapshot = now_predictions.clone() if args.EHSKD else None
     for batch_idx, (inputs, targets, input_indices) in enumerate(train_loader):
         torch.autograd.set_detect_anomaly(True)
         if args.gpu is not None:
@@ -247,11 +249,11 @@ def train(all_predictions,
             targets = targets.cuda(non_blocking=True)
         if args.EHSKD:
             targets_numpy = targets.cpu().detach().numpy()
-            identity_matrix = torch.eye(len(train_loader.dataset.classes)) 
+            identity_matrix = torch.eye(len(train_loader.dataset.classes))
             targets_one_hot = identity_matrix[targets_numpy]
             if epoch == 0:
                 all_predictions[input_indices] = targets_one_hot
-            outputs_T = now_predictions[input_indices]
+            outputs_T = teacher_snapshot[input_indices]
             outputs_T = outputs_T.cuda()
             outputs_S = net(inputs)
             if isinstance(outputs_S, list):
