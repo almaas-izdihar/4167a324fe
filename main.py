@@ -296,8 +296,23 @@ def train(all_predictions,
             current_LR, train_losses.avg, train_top1.avg, train_top5.avg, correct, total))
     if args.distributed:
         dist.barrier()
+    gpu_util_str = 'N/A'
+    vram_str = 'N/A'
+    if torch.cuda.is_available():
+        mem_used = torch.cuda.memory_allocated() / 1024**3
+        mem_reserved = torch.cuda.memory_reserved() / 1024**3
+        mem_total = torch.cuda.get_device_properties(0).total_memory / 1024**3
+        vram_str = '{:.1f}/{:.1f}GB(res:{:.1f}GB)'.format(mem_used, mem_total, mem_reserved)
+        try:
+            import subprocess
+            result = subprocess.run(
+                ['nvidia-smi', '--query-gpu=utilization.gpu', '--format=csv,noheader,nounits'],
+                capture_output=True, text=True, timeout=3)
+            gpu_util_str = result.stdout.strip().split('\n')[0] + '%'
+        except Exception:
+            pass
     logger = logging.getLogger('train')
-    logger.info('[Rank {}] [Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}]'.format(
+    logger.info('[Rank {}] [Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}] [GPU_util {}] [VRAM {}]'.format(
         args.rank,
         epoch,
         args.EHSKD,
@@ -306,7 +321,9 @@ def train(all_predictions,
         train_top1.avg,
         train_top5.avg,
         correct,
-        total))
+        total,
+        gpu_util_str,
+        vram_str))
     return now_predictions
 def val(criterion_CE,
         net,
