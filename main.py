@@ -170,7 +170,9 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
         gpu_log_path = os.path.join(log_dir, 'gpu_stats.log')
         try:
             gpu_monitor_proc = subprocess.Popen(
-                ['nvidia-smi', 'dmon', '-s', 'um', '-d', '30', '-f', gpu_log_path],
+                ['bash', '-c',
+                 'while true; do nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total'
+                 ' --format=csv,noheader >> "{}"; sleep 30; done'.format(gpu_log_path)],
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             print(C.green("[!] GPU monitor started → {}".format(gpu_log_path)))
         except Exception as e:
