@@ -143,7 +143,7 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
             args.batch_size = int(args.batch_size / args.ngpus_per_node)
             print(C.underline(C.yellow("[Info] [Rank {}] Workers: {}".format(args.rank, args.workers))))
             print(C.underline(C.yellow("[Info] [Rank {}] Batch_size: {}".format(args.rank, args.batch_size))))
-            net = torch.nn.parallel.DistributedDataParallel(net,device_ids=[args.gpu],broadcast_buffers=False)
+            net = torch.nn.parallel.DistributedDataParallel(net,device_ids=[args.gpu],broadcast_buffers=False,find_unused_parameters=True)
             print(C.green("[!] [Rank {}] Distributed DataParallel Setting End".format(args.rank)))
         else:
             net.cuda()
