@@ -287,24 +287,30 @@ def train(all_predictions,
         if args.EHSKD:
             if args.distributed:
                 for jdx in range(len(gathered_prediction)):
-                    now_predictions[gathered_indices[jdx]] = gathered_prediction[jdx].detach()
+                    idx = gathered_indices[jdx]
+                    now_predictions[idx] = (gathered_prediction[jdx].cpu().detach() * args.beta
+                                            + now_predictions[idx] * (1 - args.beta))
             else:
                 now_predictions[input_indices] = outputs_S.cpu().detach() * args.beta + now_predictions[input_indices] * (1-args.beta)
         progress_bar(epoch,batch_idx, len(train_loader), args, 'lr: {:.1e} |  loss: {:.3f} | top1_acc: {:.3f} | top5_acc: {:.3f} | correct/total({}/{})'.format(
             current_LR, train_losses.avg, train_top1.avg, train_top5.avg, correct, total))
     if args.distributed:
         dist.barrier()
-    logger = logging.getLogger('train')
-    logger.info('[Rank {}] [Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}]'.format(
-        args.rank,
-        epoch,
-        args.EHSKD,
-        current_LR,
-        train_losses.avg,
-        train_top1.avg,
-        train_top5.avg,
-        correct,
-        total))
+        if args.EHSKD:
+            now_preds_gpu = now_predictions.cuda(args.gpu)
+            dist.all_reduce(now_preds_gpu, op=dist.ReduceOp.SUM)
+            now_predictions = now_preds_gpu.cpu()
+    if is_main_process():
+        logger = logging.getLogger('train')
+        logger.info('[Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}]'.format(
+            epoch,
+            args.EHSKD,
+            current_LR,
+            train_losses.avg,
+            train_top1.avg,
+            train_top5.avg,
+            correct,
+            total))
     return now_predictions
 def val(criterion_CE,
         net,
