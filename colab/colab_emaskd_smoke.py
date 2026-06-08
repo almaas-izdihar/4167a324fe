@@ -111,7 +111,7 @@ gpu_before = gpu_info()
 t0 = time.time()
 
 run_training(
-    f"CUDA_VISIBLE_DEVICES=0 python3 -u main.py "
+    f"COLUMNS=80 CUDA_VISIBLE_DEVICES=0 python3 -u main.py "
     f"--data_type cifar100 --data_path {DATA} "
     f"--classifier_type ResNet18 "
     f"--batch_size {BATCH_SIZE} --end_epoch {END_EPOCH} --workers {WORKERS} "
