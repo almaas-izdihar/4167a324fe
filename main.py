@@ -48,6 +48,9 @@ def parse_args():
     parser.add_argument('--multiprocessing_distributed', action='store_true')
     parser.add_argument('--resume', type=str, default=None)
     parser.add_argument('--beta', default=1.0, type=float)
+    parser.add_argument('--confidence_gate', action='store_true')
+    parser.add_argument('--tau_max', default=0.7, type=float)
+    parser.add_argument('--tau_min', default=0.1, type=float)
     parser.add_argument('--seed', default=2024, type=int)
     args = parser.parse_args()
     random.seed(args.seed)
@@ -240,6 +243,9 @@ def train(all_predictions,
     total = 0
     net.train()
     current_LR = get_learning_rate(optimizer)[0]
+    tau_t = args.tau_max - (args.tau_max - args.tau_min) * (epoch / max(args.end_epoch - 1, 1))
+    gate_pct_accum = 0.0
+    gate_batches = 0
     for batch_idx, (inputs, targets, input_indices) in enumerate(train_loader):
         torch.autograd.set_detect_anomaly(True)
         if args.gpu is not None:
@@ -291,7 +297,16 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
-                now_predictions[input_indices] = outputs_S.cpu().detach() * args.beta + now_predictions[input_indices] * (1-args.beta)
+                if args.confidence_gate:
+                    probs = torch.softmax(outputs_S.cpu().detach(), dim=1)
+                    mask  = probs.max(dim=1).values > tau_t
+                    idx   = input_indices[mask]
+                    now_predictions[idx] = probs[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
+                    gate_pct_accum += mask.float().mean().item() * 100
+                else:
+                    now_predictions[input_indices] = outputs_S.cpu().detach() * args.beta + now_predictions[input_indices] * (1 - args.beta)
+                    gate_pct_accum += 100.0
+                gate_batches += 1
         progress_bar(epoch,batch_idx, len(train_loader), args, 'lr: {:.1e} |  loss: {:.3f} | top1_acc: {:.3f} | top5_acc: {:.3f} | correct/total({}/{})'.format(
             current_LR, train_losses.avg, train_top1.avg, train_top5.avg, correct, total))
     if args.distributed:
@@ -302,7 +317,8 @@ def train(all_predictions,
             now_predictions = now_preds_gpu.cpu()
     if is_main_process():
         logger = logging.getLogger('train')
-        logger.info('[Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}]'.format(
+        gate_pct = gate_pct_accum / max(gate_batches, 1)
+        logger.info('[Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}] [gate {:.1f}%] [tau {:.3f}]'.format(
             epoch,
             args.EHSKD,
             current_LR,
@@ -310,7 +326,9 @@ def train(all_predictions,
             train_top1.avg,
             train_top5.avg,
             correct,
-            total))
+            total,
+            gate_pct,
+            tau_t))
     return now_predictions
 def val(criterion_CE,
         net,

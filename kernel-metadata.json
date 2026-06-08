@@ -1,14 +1,14 @@
 {
-  "id": "almaasizdihar/notebook4167a324fe",
-  "title": "notebook4167a324fe",
+  "id": "almaasizdihar/fork-of-notebook4167a324fe-45e41f",
+  "title": "fork-of-notebook4167a324fe-45e41f",
   "code_file": "ema_skd_baseline.ipynb",
   "language": "python",
   "kernel_type": "notebook",
   "is_private": "true",
   "enable_gpu": "true",
   "enable_tpu": "false",
-  "machine_shape": "NvidiaTeslaT4",
   "enable_internet": "true",
+  "machine_shape": "NvidiaTeslaT4",
   "dataset_sources": [],
   "competition_sources": [],
   "kernel_sources": []
