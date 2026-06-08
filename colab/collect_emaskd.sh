@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Phase 2 of 3 — run after emaskd training completes.
-# Downloads emaskd artifacts to /tmp/emaskd-collect/, stops session.
-# Must run before collect_results.sh (phase 3).
+# Downloads emaskd artifacts to /tmp/emaskd-collect/.
+# Does NOT stop the session — caller stops it after verifying artifacts.
 #
 # Usage: ./colab/collect_emaskd.sh <session>
 # Example: ./colab/collect_emaskd.sh emaskd
@@ -35,8 +35,4 @@ colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/emaskd_gpu_timeseries.jso
 
 echo "[collect_emaskd] artifacts saved to ${LOCAL_TMP}/"
 ls -lh "$LOCAL_TMP/"
-
-# 3. Stop session
-colab --auth=adc stop -s "$SESSION"
-echo "[collect_emaskd] session '${SESSION}' stopped"
-echo "[collect_emaskd] done — run collect_results.sh next"
+echo "[collect_emaskd] done — verify artifacts, then stop session manually"

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Phase 3 of 3 — run after collect_baseline.sh and collect_emaskd.sh.
 # Provisions a fresh analysis session, uploads both artifact sets,
-# runs notebook, downloads outputs, commits to results/logs/<slug>/, stops session.
+# runs notebook, downloads outputs, commits to results/logs/<slug>/.
+# Does NOT stop the analysis session — caller stops it after verifying outputs.
 #
 # Usage: ./colab/collect_results.sh <slug>
 # Example: ./colab/collect_results.sh 2026-06-08-1430-smoke
@@ -83,7 +84,4 @@ git add "${LOCAL_DIR}/"
 git commit -m "results: ${SLUG} — plots + executed notebook"
 git push origin HEAD
 echo "[collect_results] pushed to $(git branch --show-current)"
-
-# 7. Stop analysis session
-colab --auth=adc stop -s "$ANALYSIS_SESSION"
-echo "[collect_results] analysis session stopped"
+echo "[collect_results] done — verify results/logs/${SLUG}/, then stop analysis session manually"

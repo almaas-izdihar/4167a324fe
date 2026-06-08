@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Phase 1 of 2 — run after baseline training completes.
-# Downloads baseline artifacts to /tmp/baseline-collect/, stops session.
-# Must run before collect_results.sh (phase 2).
+# Phase 1 of 3 — run after baseline training completes.
+# Downloads baseline artifacts to /tmp/baseline-collect/.
+# Does NOT stop the session — caller stops it after verifying artifacts.
 #
 # Usage: ./colab/collect_baseline.sh <session>
 # Example: ./colab/collect_baseline.sh baseline
@@ -35,8 +35,4 @@ colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/baseline_gpu_timeseries.j
 
 echo "[collect_baseline] artifacts saved to ${LOCAL_TMP}/"
 ls -lh "$LOCAL_TMP/"
-
-# 3. Stop session
-colab --auth=adc stop -s "$SESSION"
-echo "[collect_baseline] session '${SESSION}' stopped"
-echo "[collect_baseline] done — run collect_results.sh next"
+echo "[collect_baseline] done — verify artifacts, then stop session manually"

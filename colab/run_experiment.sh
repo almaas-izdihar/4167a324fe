@@ -42,6 +42,7 @@ echo "[1/3] BASELINE SESSION"
 colab --auth=adc new --gpu T4 -s baseline
 colab --auth=adc exec --timeout "$BASELINE_TIMEOUT" -s baseline -f "$BASELINE_SCRIPT"
 bash colab/collect_baseline.sh baseline
+colab --auth=adc stop -s baseline
 echo "[1/3] baseline done"
 
 # ── Session 2: EMA-SKD ────────────────────
@@ -50,12 +51,14 @@ echo "[2/3] EMASKD SESSION"
 colab --auth=adc new --gpu T4 -s emaskd
 colab --auth=adc exec --timeout "$EMASKD_TIMEOUT" -s emaskd -f "$EMASKD_SCRIPT"
 bash colab/collect_emaskd.sh emaskd
+colab --auth=adc stop -s emaskd
 echo "[2/3] emaskd done"
 
 # ── Session 3: Analysis ───────────────────
 echo ""
 echo "[3/3] ANALYSIS SESSION"
 bash colab/collect_results.sh "$SLUG"
+colab --auth=adc stop -s analysis
 echo "[3/3] analysis done"
 
 echo ""
