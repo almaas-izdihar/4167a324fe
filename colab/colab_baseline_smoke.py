@@ -18,11 +18,11 @@ def run(cmd, **kw):
 def run_training(cmd, total_epochs):
     print(f"$ {cmd}", flush=True)
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    _log_stop = threading.Event()
+    _stop = threading.Event()
 
     def _log_watcher():
         log_path, log_pos = None, 0
-        while not _log_stop.is_set():
+        while not _stop.is_set():
             if log_path is None:
                 found = glob.glob("models/*/log/log.txt")
                 if found:
@@ -39,15 +39,22 @@ def run_training(cmd, total_epochs):
                         log_pos = f.tell()
                 except (IOError, OSError):
                     pass
-            _log_stop.wait(2)
+            _stop.wait(2)
 
-    watcher = threading.Thread(target=_log_watcher, daemon=True)
-    watcher.start()
+    def _heartbeat():
+        i = 0
+        while not _stop.is_set():
+            _stop.wait(300)
+            if not _stop.is_set():
+                i += 1
+                print(f"[heartbeat] {i}", flush=True)
+
+    threading.Thread(target=_log_watcher, daemon=True).start()
+    threading.Thread(target=_heartbeat, daemon=True).start()
     for line in proc.stdout:
         print(line, end='', flush=True)
     proc.wait()
-    _log_stop.set()
-    watcher.join(timeout=5)
+    _stop.set()
     if proc.returncode != 0:
         sys.exit(proc.returncode)
 
