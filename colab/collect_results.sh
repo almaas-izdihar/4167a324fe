@@ -1,59 +1,73 @@
 #!/usr/bin/env bash
-# Usage: ./colab/collect_results.sh <session> <slug>
-# Example: ./colab/collect_results.sh smoke 2026-06-08-smoke
+# Phase 2 of 2 — run after emaskd training completes AND collect_baseline.sh has run.
+# Uploads baseline artifacts to emaskd session, runs notebook, downloads outputs,
+# commits to results/logs/<slug>/, stops session.
 #
-# Downloads notebook output + plots from remote VM into results/logs/<slug>/
-# then commits and pushes to current branch.
+# Usage: ./colab/collect_results.sh <emaskd-session> <slug>
+# Example: ./colab/collect_results.sh emaskd 2026-06-08-1430-emaskd-smoke
+#
+# Requires: /tmp/baseline-collect/ populated by collect_baseline.sh
 
 set -e
 
-SESSION="${1:?Usage: $0 <session> <slug>}"
-SLUG="${2:?Usage: $0 <session> <slug>}"
+SESSION="${1:?Usage: $0 <emaskd-session> <slug>}"
+SLUG="${2:?Usage: $0 <emaskd-session> <slug>}"
 REMOTE_DIR="/content/ema-skd/results"
 LOCAL_DIR="results/logs/${SLUG}"
+LOCAL_TMP="/tmp/baseline-collect"
 
-echo "[collect] session=${SESSION}  slug=${SLUG}"
-echo "[collect] destination: ${LOCAL_DIR}"
+echo "[collect_results] session=${SESSION}  slug=${SLUG}"
 
-# 1. Copy model logs to results/ on remote (smoke scripts skip this)
-echo "[collect] prep: copying model logs to remote results/"
-cat > /tmp/prep_logs.py << 'PYEOF'
+# 1. Verify baseline artifacts exist locally
+if [ ! -f "${LOCAL_TMP}/baseline_log.txt" ]; then
+    echo "ERROR: ${LOCAL_TMP}/baseline_log.txt not found"
+    echo "Run collect_baseline.sh first."
+    exit 1
+fi
+
+# 2. Copy emaskd log to results/ on remote
+cat > /tmp/prep_emaskd_logs.py << 'PYEOF'
 import glob, shutil, os
 os.makedirs("/content/ema-skd/results", exist_ok=True)
-base = sorted(glob.glob("/content/ema-skd/models/*EHSKD_False*/log/log.txt"))
-ema  = sorted(glob.glob("/content/ema-skd/models/*EHSKD_True*/log/log.txt"))
-if base: shutil.copy(base[-1], "/content/ema-skd/results/baseline_log.txt"); print(f"baseline: {base[-1]}")
-else:    print("WARNING: no baseline log found")
-if ema:  shutil.copy(ema[-1],  "/content/ema-skd/results/emaskd_log.txt");  print(f"emaskd:   {ema[-1]}")
-else:    print("WARNING: no emaskd log found")
+logs = sorted(glob.glob("/content/ema-skd/models/*EHSKD_True*/log/log.txt"))
+if logs:
+    shutil.copy(logs[-1], "/content/ema-skd/results/emaskd_log.txt")
+    print(f"emaskd log: {logs[-1]}")
+else:
+    print("WARNING: no emaskd log found"); exit(1)
 PYEOF
-colab --auth=adc exec -s "$SESSION" -f /tmp/prep_logs.py
+colab --auth=adc exec -s "$SESSION" -f /tmp/prep_emaskd_logs.py
 
-# 2. Run analysis notebook
-echo "[collect] running analyze_logs.ipynb..."
+# 3. Upload baseline artifacts to emaskd session
+echo "[collect_results] uploading baseline artifacts to session..."
+colab --auth=adc upload -s "$SESSION" "${LOCAL_TMP}/baseline_log.txt"             "${REMOTE_DIR}/baseline_log.txt"
+[ -f "${LOCAL_TMP}/baseline_report.json"         ] && colab --auth=adc upload -s "$SESSION" "${LOCAL_TMP}/baseline_report.json"         "${REMOTE_DIR}/baseline_report.json"
+[ -f "${LOCAL_TMP}/baseline_gpu_timeseries.json" ] && colab --auth=adc upload -s "$SESSION" "${LOCAL_TMP}/baseline_gpu_timeseries.json" "${REMOTE_DIR}/baseline_gpu_timeseries.json"
+
+# 4. Run analysis notebook
+echo "[collect_results] running analyze_logs.ipynb..."
 colab --auth=adc exec --timeout 120 -s "$SESSION" -f colab/analyze_logs.ipynb
 
-# 3. Create local log dir
+# 5. Download all artifacts
 mkdir -p "$LOCAL_DIR"
-
-# 4. Download plots + GPU/timing reports
-echo "[collect] downloading plots and reports..."
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/eval_curves.png"         "${LOCAL_DIR}/eval_curves.png"
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/gate_curriculum.png"      "${LOCAL_DIR}/gate_curriculum.png"
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/train_dynamics.png"       "${LOCAL_DIR}/train_dynamics.png"
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/baseline_report.json"     "${LOCAL_DIR}/baseline_report.json" 2>/dev/null || echo "[collect] baseline_report.json not found — skipping"
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/emaskd_report.json"       "${LOCAL_DIR}/emaskd_report.json"   2>/dev/null || echo "[collect] emaskd_report.json not found — skipping"
-
-# 5. Copy executed notebook (saved locally by colab exec)
+echo "[collect_results] downloading outputs..."
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/eval_curves.png"                "${LOCAL_DIR}/eval_curves.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/gate_curriculum.png"             "${LOCAL_DIR}/gate_curriculum.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/train_dynamics.png"              "${LOCAL_DIR}/train_dynamics.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/gpu_timeseries.png"              "${LOCAL_DIR}/gpu_timeseries.png"              2>/dev/null || echo "[skip] gpu_timeseries.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/baseline_report.json"            "${LOCAL_DIR}/baseline_report.json"            2>/dev/null || echo "[skip] baseline_report.json"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/emaskd_report.json"              "${LOCAL_DIR}/emaskd_report.json"              2>/dev/null || echo "[skip] emaskd_report.json"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/baseline_gpu_timeseries.json"    "${LOCAL_DIR}/baseline_gpu_timeseries.json"    2>/dev/null || echo "[skip] baseline_gpu_timeseries.json"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/emaskd_gpu_timeseries.json"      "${LOCAL_DIR}/emaskd_gpu_timeseries.json"      2>/dev/null || echo "[skip] emaskd_gpu_timeseries.json"
 cp colab/analyze_logs_output.ipynb "${LOCAL_DIR}/analyze_logs_output.ipynb"
-echo "[collect] notebook copied to ${LOCAL_DIR}/"
+echo "[collect_results] notebook copied to ${LOCAL_DIR}/"
 
 # 6. Commit + push
 git add "${LOCAL_DIR}/"
 git commit -m "results: ${SLUG} — plots + executed notebook"
 git push origin HEAD
-echo "[collect] pushed to $(git branch --show-current)"
+echo "[collect_results] pushed to $(git branch --show-current)"
 
 # 7. Stop session
 colab --auth=adc stop -s "$SESSION"
-echo "[collect] session '${SESSION}' stopped"
+echo "[collect_results] session '${SESSION}' stopped"

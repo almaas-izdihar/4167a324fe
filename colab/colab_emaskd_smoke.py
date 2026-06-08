@@ -1,4 +1,4 @@
-import subprocess, sys, os, time, json
+import subprocess, sys, os, time, json, threading
 
 REPO   = "https://github.com/almaas-izdihar/4167a324fe"
 BRANCH = "experiment/confidence-filter"
@@ -37,7 +37,6 @@ if not os.path.exists(DIR):
     run(f"git clone {REPO} {DIR}")
 run(f"git -C {DIR} checkout {BRANCH}")
 run(f"git -C {DIR} log --oneline -3")
-
 os.chdir(DIR)
 
 # Pre-download CIFAR-100
@@ -46,6 +45,30 @@ import torchvision
 torchvision.datasets.CIFAR100(DATA, train=True,  download=True)
 torchvision.datasets.CIFAR100(DATA, train=False, download=True)
 print("CIFAR-100 ready.", flush=True)
+
+# GPU timeseries sampler
+_samples = []
+_stop = threading.Event()
+
+def _sampler(interval=5):
+    t0 = time.time()
+    while not _stop.is_set():
+        r = subprocess.run(
+            "nvidia-smi --query-gpu=utilization.gpu,memory.used,temperature.gpu "
+            "--format=csv,noheader,nounits",
+            shell=True, capture_output=True, text=True
+        )
+        if r.returncode == 0:
+            try:
+                p = [x.strip() for x in r.stdout.strip().split(',')]
+                _samples.append({"t": round(time.time()-t0, 1),
+                                  "util": int(p[0]), "mem_mb": int(p[1]), "temp_c": int(p[2])})
+            except (ValueError, IndexError):
+                pass
+        _stop.wait(interval)
+
+_t = threading.Thread(target=_sampler, args=(5,), daemon=True)
+_t.start()
 
 # Train
 gpu_before = gpu_info()
@@ -63,21 +86,23 @@ run(
 )
 
 duration = time.time() - t0
+_stop.set(); _t.join(timeout=10)
 gpu_after = gpu_info()
 
 os.makedirs("results", exist_ok=True)
 report = {
-    "model":           "emaskd",
-    "epochs":          END_EPOCH,
-    "duration_sec":    round(duration, 1),
-    "duration_human":  f"{int(duration//60)}m{int(duration%60)}s",
-    "gpu_before":      gpu_before,
-    "gpu_after":       gpu_after,
+    "model":          "emaskd",
+    "epochs":         END_EPOCH,
+    "duration_sec":   round(duration, 1),
+    "duration_human": f"{int(duration//60)}m{int(duration%60)}s",
+    "gpu_before":     gpu_before,
+    "gpu_after":      gpu_after,
 }
 with open("results/emaskd_report.json", "w") as f:
     json.dump(report, f, indent=2)
+with open("results/emaskd_gpu_timeseries.json", "w") as f:
+    json.dump(_samples, f)
 print(f"[report] duration={report['duration_human']}  gpu={gpu_before.get('gpu')}  "
-      f"mem_before={gpu_before.get('mem_used_mb')}MB  mem_after={gpu_after.get('mem_used_mb')}MB",
-      flush=True)
+      f"samples={len(_samples)}", flush=True)
 
 print("[colab_emaskd_smoke] done", flush=True)
