@@ -51,3 +51,7 @@ git add "${LOCAL_DIR}/"
 git commit -m "results: ${SLUG} — plots + executed notebook"
 git push origin HEAD
 echo "[collect] pushed to $(git branch --show-current)"
+
+# 7. Stop session
+colab --auth=adc stop -s "$SESSION"
+echo "[collect] session '${SESSION}' stopped"
