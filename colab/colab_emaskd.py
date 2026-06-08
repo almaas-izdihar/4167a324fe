@@ -1,6 +1,6 @@
 import subprocess, sys, os, glob, shutil, datetime
 
-REPO   = "https://github.com/almaas-izdihar/ema-skd"
+REPO   = "https://github.com/almaas-izdihar/4167a324fe"
 BRANCH = "experiment/confidence-filter"
 DIR    = "/content/ema-skd"
 DATA   = "/content/data"
@@ -54,11 +54,11 @@ else:
         print("[push] no log found — skipping", flush=True)
     else:
         # Pull first to get baseline_log.txt if already pushed
-        run(f"git pull https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/ema-skd {BRANCH}")
+        run(f"git pull https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/4167a324fe {BRANCH}")
         os.makedirs("results", exist_ok=True)
         shutil.copy(logs[-1], "results/emaskd_log.txt")
         ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-        remote = f"https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/ema-skd"
+        remote = f"https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/4167a324fe"
         run("git config user.email 'almaasizdihar@gmail.com'")
         run("git config user.name 'almaas-izdihar'")
         run("git add results/emaskd_log.txt")

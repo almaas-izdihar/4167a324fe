@@ -1,6 +1,6 @@
 import subprocess, sys, os
 
-REPO   = "https://github.com/almaas-izdihar/ema-skd"
+REPO   = "https://github.com/almaas-izdihar/4167a324fe"
 BRANCH = "experiment/colab-conf-filter"
 DIR    = "/content/ema-skd"
 DATA   = "/content/data"
