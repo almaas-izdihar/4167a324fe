@@ -36,11 +36,13 @@ colab --auth=adc exec --timeout 120 -s "$SESSION" -f colab/analyze_logs.ipynb
 # 3. Create local log dir
 mkdir -p "$LOCAL_DIR"
 
-# 4. Download plots
-echo "[collect] downloading plots..."
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/eval_curves.png"    "${LOCAL_DIR}/eval_curves.png"
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/gate_curriculum.png" "${LOCAL_DIR}/gate_curriculum.png"
-colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/train_dynamics.png"  "${LOCAL_DIR}/train_dynamics.png"
+# 4. Download plots + GPU/timing reports
+echo "[collect] downloading plots and reports..."
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/eval_curves.png"         "${LOCAL_DIR}/eval_curves.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/gate_curriculum.png"      "${LOCAL_DIR}/gate_curriculum.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/train_dynamics.png"       "${LOCAL_DIR}/train_dynamics.png"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/baseline_report.json"     "${LOCAL_DIR}/baseline_report.json" 2>/dev/null || echo "[collect] baseline_report.json not found — skipping"
+colab --auth=adc download -s "$SESSION" "${REMOTE_DIR}/emaskd_report.json"       "${LOCAL_DIR}/emaskd_report.json"   2>/dev/null || echo "[collect] emaskd_report.json not found — skipping"
 
 # 5. Copy executed notebook (saved locally by colab exec)
 cp colab/analyze_logs_output.ipynb "${LOCAL_DIR}/analyze_logs_output.ipynb"
