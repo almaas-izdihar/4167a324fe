@@ -117,6 +117,7 @@ run_training(
     f"--classifier_type ResNet18 "
     f"--batch_size {BATCH_SIZE} --end_epoch {END_EPOCH} --workers {WORKERS} "
     f"--seed 2024 "
+    f"--saveckp_freq 10 "
     f"--experiment_type s0_baseline",
     total_epochs=END_EPOCH
 )

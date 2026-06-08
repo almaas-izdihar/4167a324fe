@@ -117,6 +117,7 @@ run_training(
     f"--classifier_type ResNet18 "
     f"--batch_size {BATCH_SIZE} --end_epoch {END_EPOCH} --workers {WORKERS} "
     f"--seed 2024 "
+    f"--saveckp_freq 10 "
     f"--beta 0.5 --EHSKD "
     f"--confidence_gate --tau_max 0.7 --tau_min 0.1 "
     f"--experiment_type s1_emaskd_conf_gate",
