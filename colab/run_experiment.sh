@@ -57,6 +57,7 @@ echo "[2/3] emaskd done"
 # ── Session 3: Analysis ───────────────────
 echo ""
 echo "[3/3] ANALYSIS SESSION"
+colab --auth=adc new --gpu T4 -s analysis
 bash colab/collect_results.sh "$SLUG"
 colab --auth=adc stop -s analysis
 echo "[3/3] analysis done"

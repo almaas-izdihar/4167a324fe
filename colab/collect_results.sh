@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # Phase 3 of 3 — run after collect_baseline.sh and collect_emaskd.sh.
-# Provisions a fresh analysis session, uploads both artifact sets,
+# Uploads both artifact sets to an already-running analysis session,
 # runs notebook, downloads outputs, commits to results/logs/<slug>/.
-# Does NOT stop the analysis session — caller stops it after verifying outputs.
+# Does NOT provision or stop the session — caller does both.
 #
 # Usage: ./colab/collect_results.sh <slug>
 # Example: ./colab/collect_results.sh 2026-06-08-1430-smoke
 #
 # Requires:
+#   analysis session already running (colab --auth=adc new --gpu T4 -s analysis)
 #   /tmp/baseline-collect/  populated by collect_baseline.sh
 #   /tmp/emaskd-collect/    populated by collect_emaskd.sh
 
@@ -32,11 +33,7 @@ for f in "${BASELINE_TMP}/baseline_log.txt" "${EMASKD_TMP}/emaskd_log.txt"; do
     fi
 done
 
-# 1. Provision fresh analysis session
-echo "[collect_results] provisioning analysis session..."
-colab --auth=adc new --gpu T4 -s "$ANALYSIS_SESSION"
-
-# 2. Clone repo on analysis session (sets up dir structure for notebook)
+# 1. Clone repo on analysis session (sets up dir structure for notebook)
 cat > /tmp/setup_analysis.py << PYEOF
 import subprocess, os
 REPO   = "${REPO}"
