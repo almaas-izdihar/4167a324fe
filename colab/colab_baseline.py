@@ -1,7 +1,7 @@
-import subprocess, sys, os
+import subprocess, sys, os, glob, shutil, datetime
 
 REPO   = "https://github.com/almaas-izdihar/ema-skd"
-BRANCH = "experiment/colab-conf-filter"
+BRANCH = "experiment/confidence-filter"
 DIR    = "/content/ema-skd"
 DATA   = "/content/data"
 
@@ -39,5 +39,27 @@ run(
     f"--seed 2024 "
     f"--experiment_type s0_baseline"
 )
+
+print("[colab_baseline] training done", flush=True)
+
+# Push log to GitHub
+GH_TOKEN = os.environ.get("GH_TOKEN", "")
+if not GH_TOKEN:
+    print("[push] GH_TOKEN not set — skipping push", flush=True)
+else:
+    logs = sorted(glob.glob("models/*EHSKD_False*/log/log.txt"))
+    if not logs:
+        print("[push] no log found — skipping", flush=True)
+    else:
+        os.makedirs("results", exist_ok=True)
+        shutil.copy(logs[-1], "results/baseline_log.txt")
+        ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        remote = f"https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/ema-skd"
+        run("git config user.email 'almaasizdihar@gmail.com'")
+        run("git config user.name 'almaas-izdihar'")
+        run("git add results/baseline_log.txt")
+        run(f"git commit -m 'results: baseline {ts}'")
+        run(f"git push {remote} HEAD:{BRANCH}")
+        print("[push] baseline_log.txt pushed", flush=True)
 
 print("[colab_baseline] done", flush=True)

@@ -1,7 +1,7 @@
-import subprocess, sys, os
+import subprocess, sys, os, glob, shutil, datetime
 
 REPO   = "https://github.com/almaas-izdihar/ema-skd"
-BRANCH = "experiment/colab-conf-filter"
+BRANCH = "experiment/confidence-filter"
 DIR    = "/content/ema-skd"
 DATA   = "/content/data"
 
@@ -41,5 +41,29 @@ run(
     f"--confidence_gate --tau_max 0.7 --tau_min 0.1 "
     f"--experiment_type s1_emaskd_conf_gate"
 )
+
+print("[colab_emaskd] training done", flush=True)
+
+# Push log to GitHub
+GH_TOKEN = os.environ.get("GH_TOKEN", "")
+if not GH_TOKEN:
+    print("[push] GH_TOKEN not set — skipping push", flush=True)
+else:
+    logs = sorted(glob.glob("models/*EHSKD_True*/log/log.txt"))
+    if not logs:
+        print("[push] no log found — skipping", flush=True)
+    else:
+        # Pull first to get baseline_log.txt if already pushed
+        run(f"git pull https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/ema-skd {BRANCH}")
+        os.makedirs("results", exist_ok=True)
+        shutil.copy(logs[-1], "results/emaskd_log.txt")
+        ts = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        remote = f"https://oauth2:{GH_TOKEN}@github.com/almaas-izdihar/ema-skd"
+        run("git config user.email 'almaasizdihar@gmail.com'")
+        run("git config user.name 'almaas-izdihar'")
+        run("git add results/emaskd_log.txt")
+        run(f"git commit -m 'results: emaskd {ts}'")
+        run(f"git push {remote} HEAD:{BRANCH}")
+        print("[push] emaskd_log.txt pushed", flush=True)
 
 print("[colab_emaskd] done", flush=True)
