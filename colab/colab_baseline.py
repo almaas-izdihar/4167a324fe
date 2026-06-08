@@ -18,13 +18,36 @@ def run(cmd, **kw):
 def run_training(cmd, total_epochs):
     print(f"$ {cmd}", flush=True)
     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    _log_stop = threading.Event()
+
+    def _log_watcher():
+        log_path, log_pos = None, 0
+        while not _log_stop.is_set():
+            if log_path is None:
+                found = glob.glob("models/*/log/log.txt")
+                if found:
+                    log_path = found[-1]
+            if log_path:
+                try:
+                    with open(log_path) as f:
+                        f.seek(log_pos)
+                        for line in f:
+                            m = re.search(r'\[val\] \[Epoch (\d+)\].*\[val_top1_acc ([\d.]+)\].*\[val_loss ([\d.]+)\]', line)
+                            if m:
+                                ep = int(m.group(1)) + 1
+                                print(f">>> [{ep}/{total_epochs}] top1={m.group(2)} val_loss={m.group(3)}", flush=True)
+                        log_pos = f.tell()
+                except (IOError, OSError):
+                    pass
+            _log_stop.wait(2)
+
+    watcher = threading.Thread(target=_log_watcher, daemon=True)
+    watcher.start()
     for line in proc.stdout:
         print(line, end='', flush=True)
-        m = re.search(r'\[val\].*\[Epoch (\d+)\].*\[val_top1_acc ([\d.]+)\].*\[val_loss ([\d.]+)\]', line)
-        if m:
-            ep = int(m.group(1)) + 1
-            print(f">>> [{ep}/{total_epochs}] top1={m.group(2)} val_loss={m.group(3)}", flush=True)
     proc.wait()
+    _log_stop.set()
+    watcher.join(timeout=5)
     if proc.returncode != 0:
         sys.exit(proc.returncode)
 
