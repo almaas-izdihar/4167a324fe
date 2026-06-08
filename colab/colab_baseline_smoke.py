@@ -1,4 +1,4 @@
-import subprocess, sys, os, time, json, threading
+import subprocess, sys, os, time, json, threading, re
 
 REPO   = "https://github.com/almaas-izdihar/4167a324fe"
 BRANCH = "experiment/confidence-filter"
@@ -14,6 +14,19 @@ def run(cmd, **kw):
     r = subprocess.run(cmd, shell=True, **kw)
     if r.returncode != 0:
         sys.exit(r.returncode)
+
+def run_training(cmd, total_epochs):
+    print(f"$ {cmd}", flush=True)
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    for line in proc.stdout:
+        print(line, end='', flush=True)
+        m = re.search(r'\[val\].*\[Epoch (\d+)\].*\[val_top1_acc ([\d.]+)\].*\[val_loss ([\d.]+)\]', line)
+        if m:
+            ep = int(m.group(1)) + 1
+            print(f">>> [{ep}/{total_epochs}] top1={m.group(2)} val_loss={m.group(3)}", flush=True)
+    proc.wait()
+    if proc.returncode != 0:
+        sys.exit(proc.returncode)
 
 def gpu_info():
     r = subprocess.run(
@@ -74,13 +87,14 @@ _t.start()
 gpu_before = gpu_info()
 t0 = time.time()
 
-run(
-    f"CUDA_VISIBLE_DEVICES=0 python3 main.py "
+run_training(
+    f"CUDA_VISIBLE_DEVICES=0 python3 -u main.py "
     f"--data_type cifar100 --data_path {DATA} "
     f"--classifier_type ResNet18 "
     f"--batch_size {BATCH_SIZE} --end_epoch {END_EPOCH} --workers {WORKERS} "
     f"--seed 2024 "
-    f"--experiment_type s0_baseline_smoke"
+    f"--experiment_type s0_baseline_smoke",
+    total_epochs=END_EPOCH
 )
 
 duration = time.time() - t0
