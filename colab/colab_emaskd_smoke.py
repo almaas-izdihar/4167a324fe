@@ -32,10 +32,10 @@ def run_training(cmd, total_epochs):
                     with open(log_path) as f:
                         f.seek(log_pos)
                         for line in f:
-                            m = re.search(r'\[val\] \[Epoch (\d+)\]', line)
+                            m = re.search(r'\[val\] \[Epoch (\d+)\].*\[val_loss ([\d.]+)\].*\[val_top1_acc ([\d.]+)\]', line)
                             if m:
                                 ep = int(m.group(1)) + 1
-                                print(f">>> [epoch {ep}/{total_epochs}]", flush=True)
+                                print(f">>> [{ep}/{total_epochs}] top1={m.group(3)} loss={m.group(2)}", flush=True)
                         log_pos = f.tell()
                 except (IOError, OSError):
                     pass
