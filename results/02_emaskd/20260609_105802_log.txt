@@ -1,0 +1,13 @@
+[2026-06-09 10:54:58,131] [main] Namespace(experiment_type='02_emaskd', lr=0.1, weight=4.0, weight2=1.0, lr_decay_rate=0.1, lr_decay_schedule=[100, 150], weight_decay=0.0001, start_epoch=0, end_epoch=2, EHSKD=True, mult_sample=False, batch_size=128, experiments_dir='models', classifier_type='ResNet18', data_path='/content/data', data_type='cifar100', saveckp_freq=10, rank=-1, world_size=1, dist_backend='nccl', dist_url='tcp://127.0.0.1:8080', workers=2, multiprocessing_distributed=False, resume=None, beta=0.5, confidence_gate=True, tau_max=0.7, tau_min=0.1, seed=2024, distributed=False, ngpus_per_node=1, gpu=0)
+[2026-06-09 10:55:54,366] [train] [Epoch 0] [EHSKD True] [lr 1.0e-01] [train_loss 3.947] [train_top1_acc 9.382] [train_top5_acc 29.384] [correct/total 4691/50000] [gate 0.2%] [tau 0.700]
+[2026-06-09 10:55:57,481] [val] [Epoch 0] [val_loss 3.503] [val_top1_acc 15.100] [val_top5_acc 41.690] [ECE 2.368] [AURC 731.604] [EAURC 168.024] [correct/total 1510/10000]
+[2026-06-09 10:55:57,493] [best] 
+###########################
+best:15.1
+###########################
+[2026-06-09 10:57:48,236] [train] [Epoch 1] [EHSKD True] [lr 1.0e-01] [train_loss 8.424] [train_top1_acc 15.326] [train_top5_acc 41.014] [correct/total 7663/50000] [gate 10.4%] [tau 0.100]
+[2026-06-09 10:57:51,453] [val] [Epoch 1] [val_loss 3.667] [val_top1_acc 18.780] [val_top5_acc 48.420] [ECE 9.404] [AURC 697.830] [EAURC 199.662] [correct/total 1878/10000]
+[2026-06-09 10:57:51,465] [best] 
+###########################
+best:18.78
+###########################
