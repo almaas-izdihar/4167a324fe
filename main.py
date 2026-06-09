@@ -5,6 +5,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
+from torch.cuda.amp import autocast, GradScaler
 import torch.multiprocessing as mp
 import torch.utils.data.distributed
 import torch.distributed as dist
@@ -164,6 +165,7 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
     else:
         criterion_KD = None
     optimizer = torch.optim.SGD(net.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay, nesterov=True)
+    scaler = GradScaler()
     all_predictions = torch.zeros(len(train_loader.dataset), len(train_loader.dataset.classes), dtype=torch.float32)
     now_predictions = torch.zeros(len(train_loader.dataset), len(train_loader.dataset.classes), dtype=torch.float32)
     print(C.underline(C.yellow("[Info] all_predictions matrix shape {}".format(all_predictions.shape))))
@@ -195,7 +197,8 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
                                 net,
                                 epoch,
                                 train_loader,
-                                args)
+                                args,
+                                scaler)
         if args.distributed:
             dist.barrier()
         acc = val(
@@ -235,7 +238,8 @@ def train(all_predictions,
           net,
           epoch,
           train_loader,
-          args):
+          args,
+          scaler):
     train_top1 = AverageMeter()
     train_top5 = AverageMeter()
     train_losses = AverageMeter()
@@ -247,27 +251,27 @@ def train(all_predictions,
     gate_pct_accum = 0.0
     gate_batches = 0
     for batch_idx, (inputs, targets, input_indices) in enumerate(train_loader):
-        torch.autograd.set_detect_anomaly(True)
+        optimizer.zero_grad()
         if args.gpu is not None:
             inputs = inputs.cuda(non_blocking=True)
             targets = targets.cuda(non_blocking=True)
         if args.EHSKD:
             targets_numpy = targets.cpu().detach().numpy()
-            identity_matrix = torch.eye(len(train_loader.dataset.classes)) 
+            identity_matrix = torch.eye(len(train_loader.dataset.classes))
             targets_one_hot = identity_matrix[targets_numpy]
             if epoch == 0:
                 all_predictions[input_indices] = targets_one_hot
-            outputs_T = now_predictions[input_indices]
-            outputs_T = outputs_T.cuda()
-            outputs_S = net(inputs)
-            if isinstance(outputs_S, list):
-                outputs_S = outputs_S[0][0]
-            loss = criterion_CE(outputs_S, targets)
-            if epoch != 0 :
-                _, mixup_loss = Mixup(net, inputs, targets, criterion_CE, alpha=0.4)
-                loss += mixup_loss
-                loss += criterion_KD(outputs_S, outputs_T, 3.0) * 9.0 * args.weight
-                loss += RefineLoss(targets, outputs_S, outputs_T) * args.weight2
+            outputs_T = now_predictions[input_indices].cuda()
+            with autocast():
+                outputs_S = net(inputs)
+                if isinstance(outputs_S, list):
+                    outputs_S = outputs_S[0][0]
+                loss = criterion_CE(outputs_S, targets)
+                if epoch != 0:
+                    _, mixup_loss = Mixup(net, inputs, targets, criterion_CE, alpha=0.4)
+                    loss += mixup_loss
+                    loss += criterion_KD(outputs_S, outputs_T, 3.0) * 9.0 * args.weight
+                    loss += RefineLoss(targets, outputs_S, outputs_T) * args.weight2
             if args.distributed:
                 gathered_prediction = [torch.ones_like(outputs_S) for _ in range(dist.get_world_size())]
                 dist.all_gather(gathered_prediction, outputs_S)
@@ -276,17 +280,18 @@ def train(all_predictions,
                 dist.all_gather(gathered_indices, input_indices.cuda())
                 gathered_indices = torch.cat(gathered_indices, dim=0)
         else:
-            outputs_S = net(inputs)
-            if isinstance(outputs_S, list):
-                outputs_S = outputs_S[0][0]
-            loss = criterion_CE(outputs_S, targets)
+            with autocast():
+                outputs_S = net(inputs)
+                if isinstance(outputs_S, list):
+                    outputs_S = outputs_S[0][0]
+                loss = criterion_CE(outputs_S, targets)
         train_losses.update(loss.item(), inputs.size(0))
         err1, err5 = accuracy(outputs_S.data, targets, topk=(1, 5))
         train_top1.update(err1.item(), inputs.size(0))
         train_top5.update(err5.item(), inputs.size(0))
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
         _, predicted = torch.max(outputs_S, 1)
         total += targets.size(0)
         correct += predicted.eq(targets).sum().item()
@@ -294,17 +299,17 @@ def train(all_predictions,
             if args.distributed:
                 for jdx in range(len(gathered_prediction)):
                     idx = gathered_indices[jdx]
-                    now_predictions[idx] = (gathered_prediction[jdx].cpu().detach() * args.beta
+                    now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
                 if args.confidence_gate:
-                    probs = torch.softmax(outputs_S.cpu().detach(), dim=1)
+                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     mask  = probs.max(dim=1).values > tau_t
                     idx   = input_indices[mask]
                     now_predictions[idx] = probs[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
                     gate_pct_accum += mask.float().mean().item() * 100
                 else:
-                    now_predictions[input_indices] = outputs_S.cpu().detach() * args.beta + now_predictions[input_indices] * (1 - args.beta)
+                    now_predictions[input_indices] = outputs_S.detach().float().cpu() * args.beta + now_predictions[input_indices] * (1 - args.beta)
                     gate_pct_accum += 100.0
                 gate_batches += 1
         progress_bar(epoch,batch_idx, len(train_loader), args, 'lr: {:.1e} |  loss: {:.3f} | top1_acc: {:.3f} | top5_acc: {:.3f} | correct/total({}/{})'.format(
