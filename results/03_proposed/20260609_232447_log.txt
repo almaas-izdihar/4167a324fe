@@ -1,0 +1,7 @@
+[2026-06-09 23:24:13,183] [main] Namespace(experiment_type='03_proposed', lr=0.1, weight=4.0, weight2=1.0, lr_decay_rate=0.1, lr_decay_schedule=[100, 150], weight_decay=0.0001, start_epoch=0, end_epoch=1, EHSKD=True, mult_sample=False, batch_size=128, experiments_dir='models', classifier_type='ResNet18', data_path='/content/data', data_type='cifar100', saveckp_freq=10, rank=-1, world_size=1, dist_backend='nccl', dist_url='tcp://127.0.0.1:8080', workers=2, multiprocessing_distributed=False, resume=None, beta=0.5, confidence_gate=True, tau_max=0.7, tau_min=0.1, seed=2024, distributed=False, ngpus_per_node=1, gpu=0)
+[2026-06-09 23:24:40,077] [train] [Epoch 0] [EHSKD True] [lr 1.0e-01] [train_loss 3.905] [train_top1_acc 10.260] [train_top5_acc 30.752] [correct/total 5128/50000] [gate 0.3%] [tau 0.700]
+[2026-06-09 23:24:43,132] [val] [Epoch 0] [val_loss 3.481] [val_top1_acc 15.870] [val_top5_acc 42.680] [ECE 3.147] [AURC 732.244] [EAURC 183.028] [correct/total 1587/10000]
+[2026-06-09 23:24:43,144] [best] 
+###########################
+best:15.87
+###########################
