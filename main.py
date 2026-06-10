@@ -52,6 +52,7 @@ def parse_args():
     parser.add_argument('--confidence_gate', action='store_true')
     parser.add_argument('--tau_max', default=0.7, type=float)
     parser.add_argument('--tau_min', default=0.1, type=float)
+    parser.add_argument('--correct_gate', action='store_true')
     parser.add_argument('--seed', default=2024, type=int)
     args = parser.parse_args()
     random.seed(args.seed)
@@ -303,7 +304,14 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
-                if args.confidence_gate:
+                if args.correct_gate:
+                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    _, predicted = torch.max(outputs_S, 1)
+                    mask = (predicted.cpu() == targets.cpu())
+                    idx  = input_indices[mask]
+                    now_predictions[idx] = probs[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
+                    gate_pct_accum += mask.float().mean().item() * 100
+                elif args.confidence_gate:
                     probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     mask  = probs.max(dim=1).values > tau_t
                     idx   = input_indices[mask]
