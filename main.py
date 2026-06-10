@@ -55,6 +55,7 @@ def parse_args():
     parser.add_argument('--correct_gate', action='store_true')
     parser.add_argument('--soft_weight', action='store_true')
     parser.add_argument('--true_class_weight', action='store_true')
+    parser.add_argument('--warmup_epochs', default=10, type=int)
     parser.add_argument('--seed', default=2024, type=int)
     args = parser.parse_args()
     random.seed(args.seed)
@@ -171,6 +172,7 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
     scaler = GradScaler()
     all_predictions = torch.zeros(len(train_loader.dataset), len(train_loader.dataset.classes), dtype=torch.float32)
     now_predictions = torch.zeros(len(train_loader.dataset), len(train_loader.dataset.classes), dtype=torch.float32)
+    w_running = 0.1  # EMA of mean(true_class_prob) across batches — used by true_class_weight v4
     print(C.underline(C.yellow("[Info] all_predictions matrix shape {}".format(all_predictions.shape))))
     if args.resume:
         if args.gpu is None:
@@ -191,7 +193,7 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
         adjust_learning_rate(optimizer, epoch, args)
         if args.distributed:
             train_sampler.set_epoch(epoch)
-        now_predictions = train(
+        now_predictions, w_running = train(
                                 all_predictions,
                                 now_predictions,
                                 criterion_CE,
@@ -201,7 +203,8 @@ def main_worker(gpu, ngpus_per_node, model_dir, log_dir, args):
                                 epoch,
                                 train_loader,
                                 args,
-                                scaler)
+                                scaler,
+                                w_running)
         if args.distributed:
             dist.barrier()
         acc = val(
@@ -242,7 +245,8 @@ def train(all_predictions,
           epoch,
           train_loader,
           args,
-          scaler):
+          scaler,
+          w_running=0.1):
     train_top1 = AverageMeter()
     train_top5 = AverageMeter()
     train_losses = AverageMeter()
@@ -252,6 +256,7 @@ def train(all_predictions,
     current_LR = get_learning_rate(optimizer)[0]
     tau_t = args.tau_max - (args.tau_max - args.tau_min) * (epoch / max(args.end_epoch - 1, 1))
     gate_pct_accum = 0.0
+    beta_eff_accum = 0.0
     gate_batches = 0
     for batch_idx, (inputs, targets, input_indices) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -306,19 +311,26 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
-                # true-class soft weight: scale EMA update by prob at true class (normalized).
-                # combines confidence + correctness: overconfident-wrong gets near-zero weight,
-                # confident-correct gets weight > 1 (normalized). mean(beta_eff) = beta = 0.5.
+                # true-class soft weight v4: EMA normalizer + warmup + capped w_norm + floor.
+                # R1: running EMA of mean(w) replaces per-batch normalization.
+                # R2: warmup epochs use flat beta — protects one-hot init from ep0 overwrite.
+                # R3: clamp w_norm ≤ 2.0 before scaling → mean(beta_eff) ≈ beta always.
+                # R4: log actual clamp rate and mean(beta_eff) for diagnosis.
                 if args.true_class_weight:
                     probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     w = probs[torch.arange(len(targets)), targets.cpu()]  # prob at true class [B]
-                    w_norm = w / w.mean().clamp(min=1e-6)                 # normalize: mean=1.0
-                    beta_eff = (args.beta * w_norm).clamp(max=1.0)        # cap at 1.0
+                    w_running = 0.9 * w_running + 0.1 * w.mean().item()  # R1: EMA normalizer
+                    if epoch < args.warmup_epochs:
+                        beta_eff = torch.full_like(w, args.beta)          # R2: flat warmup
+                    else:
+                        w_norm = (w / max(w_running, 1e-3)).clamp(max=2.0)  # R3: capped w_norm
+                        beta_eff = (args.beta * w_norm).clamp(min=0.1, max=1.0)
                     now_predictions[input_indices] = (
                         probs * beta_eff.unsqueeze(1) +
                         now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
                     )
-                    gate_pct_accum += w_norm.mean().item() * 100          # always ~100% by design
+                    gate_pct_accum += (beta_eff >= 1.0).float().mean().item() * 100  # R4: clamp%
+                    beta_eff_accum += beta_eff.mean().item()                          # R4: mean β_eff
                 # soft weighting: scale per-sample EMA update speed by prediction confidence.
                 # NOTE: shown to degrade ECE (~31 vs ~2) — mean(beta_eff)=0.28 causes lagging teacher.
                 # kept for ablation reference only.
@@ -365,7 +377,8 @@ def train(all_predictions,
     if is_main_process():
         logger = logging.getLogger('train')
         gate_pct = gate_pct_accum / max(gate_batches, 1)
-        logger.info('[Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}] [gate {:.1f}%] [tau {:.3f}]'.format(
+        beta_eff_mean = beta_eff_accum / max(gate_batches, 1)
+        logger.info('[Epoch {}] [EHSKD {}] [lr {:.1e}] [train_loss {:.3f}] [train_top1_acc {:.3f}] [train_top5_acc {:.3f}] [correct/total {}/{}] [gate {:.1f}%] [tau {:.3f}] [beta_eff {:.3f}] [w_run {:.3f}]'.format(
             epoch,
             args.EHSKD,
             current_LR,
@@ -375,8 +388,10 @@ def train(all_predictions,
             correct,
             total,
             gate_pct,
-            tau_t))
-    return now_predictions
+            tau_t,
+            beta_eff_mean,
+            w_running))
+    return now_predictions, w_running
 def val(criterion_CE,
         net,
         epoch,
