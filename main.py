@@ -53,6 +53,7 @@ def parse_args():
     parser.add_argument('--tau_max', default=0.7, type=float)
     parser.add_argument('--tau_min', default=0.1, type=float)
     parser.add_argument('--correct_gate', action='store_true')
+    parser.add_argument('--soft_weight', action='store_true')
     parser.add_argument('--seed', default=2024, type=int)
     args = parser.parse_args()
     random.seed(args.seed)
@@ -304,9 +305,22 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
+                # soft weighting: scale per-sample EMA update speed by prediction confidence.
+                # uncertain predictions update bank slowly; confident ones at full speed.
+                # preserves EMA averaging property — no entries are blocked or frozen.
+                if args.soft_weight:
+                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    C = probs.size(1)
+                    w = ((probs.max(dim=1).values - 1.0 / C) / (1.0 - 1.0 / C)).clamp(min=0)
+                    beta_eff = args.beta * w                          # shape [B]
+                    now_predictions[input_indices] = (
+                        probs * beta_eff.unsqueeze(1) +
+                        now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
+                    )
+                    gate_pct_accum += w.mean().item() * 100           # avg weight as proxy
                 # correct-prediction gate: only update memory bank when model predicts correctly.
                 # avoids injecting overconfident wrong predictions into the teacher.
-                if args.correct_gate:
+                elif args.correct_gate:
                     probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     _, predicted = torch.max(outputs_S, 1)
                     mask = (predicted.cpu() == targets.cpu())
