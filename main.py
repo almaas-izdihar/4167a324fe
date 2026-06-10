@@ -54,6 +54,7 @@ def parse_args():
     parser.add_argument('--tau_min', default=0.1, type=float)
     parser.add_argument('--correct_gate', action='store_true')
     parser.add_argument('--soft_weight', action='store_true')
+    parser.add_argument('--true_class_weight', action='store_true')
     parser.add_argument('--seed', default=2024, type=int)
     args = parser.parse_args()
     random.seed(args.seed)
@@ -305,10 +306,23 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
+                # true-class soft weight: scale EMA update by prob at true class (normalized).
+                # combines confidence + correctness: overconfident-wrong gets near-zero weight,
+                # confident-correct gets weight > 1 (normalized). mean(beta_eff) = beta = 0.5.
+                if args.true_class_weight:
+                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    w = probs[torch.arange(len(targets)), targets.cpu()]  # prob at true class [B]
+                    w_norm = w / w.mean().clamp(min=1e-6)                 # normalize: mean=1.0
+                    beta_eff = (args.beta * w_norm).clamp(max=1.0)        # cap at 1.0
+                    now_predictions[input_indices] = (
+                        probs * beta_eff.unsqueeze(1) +
+                        now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
+                    )
+                    gate_pct_accum += w_norm.mean().item() * 100          # always ~100% by design
                 # soft weighting: scale per-sample EMA update speed by prediction confidence.
-                # uncertain predictions update bank slowly; confident ones at full speed.
-                # preserves EMA averaging property — no entries are blocked or frozen.
-                if args.soft_weight:
+                # NOTE: shown to degrade ECE (~31 vs ~2) — mean(beta_eff)=0.28 causes lagging teacher.
+                # kept for ablation reference only.
+                elif args.soft_weight:
                     probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     C = probs.size(1)
                     w = ((probs.max(dim=1).values - 1.0 / C) / (1.0 - 1.0 / C)).clamp(min=0)
