@@ -261,6 +261,7 @@ def train(all_predictions,
             targets_one_hot = identity_matrix[targets_numpy]
             if epoch == 0:
                 all_predictions[input_indices] = targets_one_hot
+                now_predictions[input_indices] = targets_one_hot
             outputs_T = now_predictions[input_indices].cuda()
             with autocast():
                 outputs_S = net(inputs)
