@@ -304,6 +304,8 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
+                # correct-prediction gate: only update memory bank when model predicts correctly.
+                # avoids injecting overconfident wrong predictions into the teacher.
                 if args.correct_gate:
                     probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     _, predicted = torch.max(outputs_S, 1)
@@ -311,6 +313,9 @@ def train(all_predictions,
                     idx  = input_indices[mask]
                     now_predictions[idx] = probs[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
                     gate_pct_accum += mask.float().mean().item() * 100
+                # confidence gate: update only when max softmax > tau_t (linearly decayed).
+                # NOTE: shown to degrade ECE (~25 vs ~2) and top1 (-2pp vs EMA-SKD) across
+                # all tau_max values tested (0.7, 0.3). kept for ablation reference only.
                 elif args.confidence_gate:
                     probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
                     mask  = probs.max(dim=1).values > tau_t
