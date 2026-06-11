@@ -317,7 +317,8 @@ def train(all_predictions,
                 # R3: clamp w_norm ≤ 2.0 before scaling → mean(beta_eff) ≈ beta always.
                 # R4: log actual clamp rate and mean(beta_eff) for diagnosis.
                 if args.true_class_weight:
-                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    logits = outputs_S.detach().float().cpu()
+                    probs = torch.softmax(logits, dim=1)  # for weight computation only
                     w = probs[torch.arange(len(targets)), targets.cpu()]  # prob at true class [B]
                     w_running = 0.9 * w_running + 0.1 * w.mean().item()  # R1: EMA normalizer
                     if epoch < args.warmup_epochs:
@@ -326,41 +327,42 @@ def train(all_predictions,
                         w_norm = (w / max(w_running, 1e-3)).clamp(max=2.0)  # R3: capped w_norm
                         beta_eff = (args.beta * w_norm).clamp(min=0.1, max=1.0)
                     now_predictions[input_indices] = (
-                        probs * beta_eff.unsqueeze(1) +
+                        logits * beta_eff.unsqueeze(1) +
                         now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
                     )
                     gate_pct_accum += (beta_eff >= 1.0).float().mean().item() * 100  # R4: clamp%
                     beta_eff_accum += beta_eff.mean().item()                          # R4: mean β_eff
                 # soft weighting: scale per-sample EMA update speed by prediction confidence.
-                # NOTE: shown to degrade ECE (~31 vs ~2) — mean(beta_eff)=0.28 causes lagging teacher.
-                # kept for ablation reference only.
+                # NOTE: pre-fix results (ECE~31) were due to softmax-in-bank bug; not yet re-tested.
                 elif args.soft_weight:
-                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    logits = outputs_S.detach().float().cpu()
+                    probs = torch.softmax(logits, dim=1)  # for weight computation only
                     C = probs.size(1)
                     w = ((probs.max(dim=1).values - 1.0 / C) / (1.0 - 1.0 / C)).clamp(min=0)
                     beta_eff = args.beta * w                          # shape [B]
                     now_predictions[input_indices] = (
-                        probs * beta_eff.unsqueeze(1) +
+                        logits * beta_eff.unsqueeze(1) +
                         now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
                     )
                     gate_pct_accum += w.mean().item() * 100           # avg weight as proxy
                 # correct-prediction gate: only update memory bank when model predicts correctly.
-                # avoids injecting overconfident wrong predictions into the teacher.
+                # NOTE: pre-fix results (ECE~34) were due to softmax-in-bank bug; not yet re-tested.
                 elif args.correct_gate:
-                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    logits = outputs_S.detach().float().cpu()
+                    probs = torch.softmax(logits, dim=1)  # for mask computation only
                     _, predicted = torch.max(outputs_S, 1)
                     mask = (predicted.cpu() == targets.cpu())
                     idx  = input_indices[mask]
-                    now_predictions[idx] = probs[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
+                    now_predictions[idx] = logits[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
                     gate_pct_accum += mask.float().mean().item() * 100
                 # confidence gate: update only when max softmax > tau_t (linearly decayed).
-                # NOTE: shown to degrade ECE (~25 vs ~2) and top1 (-2pp vs EMA-SKD) across
-                # all tau_max values tested (0.7, 0.3). kept for ablation reference only.
+                # NOTE: pre-fix results (ECE~27) were due to softmax-in-bank bug; not yet re-tested.
                 elif args.confidence_gate:
-                    probs = torch.softmax(outputs_S.detach().float().cpu(), dim=1)
+                    logits = outputs_S.detach().float().cpu()
+                    probs = torch.softmax(logits, dim=1)  # for mask computation only
                     mask  = probs.max(dim=1).values > tau_t
                     idx   = input_indices[mask]
-                    now_predictions[idx] = probs[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
+                    now_predictions[idx] = logits[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
                     gate_pct_accum += mask.float().mean().item() * 100
                 else:
                     now_predictions[input_indices] = outputs_S.detach().float().cpu() * args.beta + now_predictions[input_indices] * (1 - args.beta)
