@@ -56,6 +56,12 @@ def parse_args():
     parser.add_argument('--hard_gate', action='store_true')
     parser.add_argument('--soft_weight', action='store_true')
     parser.add_argument('--true_class_weight', action='store_true')
+    parser.add_argument('--tcw_b2_sigmoid', action='store_true',
+                        help='B2: sigmoid additive normalization for true_class_weight (refines v3)')
+    parser.add_argument('--b2_scale', default=10.0, type=float,
+                        help='B2 sigmoid scale factor: higher = sharper transition around w_running')
+    parser.add_argument('--b2_beta_min', default=0.1, type=float)
+    parser.add_argument('--b2_beta_max', default=1.0, type=float)
     parser.add_argument('--warmup_epochs', default=10, type=int)
     parser.add_argument('--seed', default=2024, type=int)
     args = parser.parse_args()
@@ -312,12 +318,31 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
+                # B2: sigmoid additive normalization — fixes v3 multiplicative ratio defect.
+                # Replaces w/w_running (bounded by 1/w_running, shrinks as w_running rises)
+                # with sigmoid((w - w_running) * scale). Dynamic range preserved throughout training.
+                if args.tcw_b2_sigmoid:
+                    logits = outputs_S.detach().float().cpu()
+                    probs = torch.softmax(logits, dim=1)
+                    w = probs[torch.arange(len(targets)), targets.cpu()]
+                    w_running = 0.9 * w_running + 0.1 * w.mean().item()
+                    if epoch < args.warmup_epochs:
+                        beta_eff = torch.full_like(w, args.beta)
+                    else:
+                        delta = w - w_running
+                        beta_eff = args.b2_beta_min + (args.b2_beta_max - args.b2_beta_min) * torch.sigmoid(delta * args.b2_scale)
+                    now_predictions[input_indices] = (
+                        logits * beta_eff.unsqueeze(1) +
+                        now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
+                    )
+                    gate_pct_accum += (beta_eff >= args.b2_beta_max * 0.95).float().mean().item() * 100  # near-ceiling%
+                    beta_eff_accum += beta_eff.mean().item()
                 # true-class soft weight v4: EMA normalizer + warmup + capped w_norm + floor.
                 # R1: running EMA of mean(w) replaces per-batch normalization.
                 # R2: warmup epochs use flat beta — protects one-hot init from ep0 overwrite.
                 # R3: clamp w_norm ≤ 2.0 before scaling → mean(beta_eff) ≈ beta always.
                 # R4: log actual clamp rate and mean(beta_eff) for diagnosis.
-                if args.true_class_weight:
+                elif args.true_class_weight:
                     logits = outputs_S.detach().float().cpu()
                     probs = torch.softmax(logits, dim=1)  # for weight computation only
                     w = probs[torch.arange(len(targets)), targets.cpu()]  # prob at true class [B]
