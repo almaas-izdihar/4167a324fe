@@ -53,6 +53,7 @@ def parse_args():
     parser.add_argument('--tau_max', default=0.7, type=float)
     parser.add_argument('--tau_min', default=0.1, type=float)
     parser.add_argument('--correct_gate', action='store_true')
+    parser.add_argument('--hard_gate', action='store_true')
     parser.add_argument('--soft_weight', action='store_true')
     parser.add_argument('--true_class_weight', action='store_true')
     parser.add_argument('--warmup_epochs', default=10, type=int)
@@ -353,6 +354,18 @@ def train(all_predictions,
                     _, predicted = torch.max(outputs_S, 1)
                     mask = (predicted.cpu() == targets.cpu())
                     idx  = input_indices[mask]
+                    now_predictions[idx] = logits[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
+                    gate_pct_accum += mask.float().mean().item() * 100
+                # hard gate: update only when model predicts correctly AND confidence > tau_t.
+                # Combines correct_gate + confidence_gate — strictest filter, no soft weighting.
+                elif args.hard_gate:
+                    logits = outputs_S.detach().float().cpu()
+                    probs = torch.softmax(logits, dim=1)
+                    _, predicted = torch.max(outputs_S, 1)
+                    correct_mask = (predicted.cpu() == targets.cpu())
+                    conf_mask = probs.max(dim=1).values > tau_t
+                    mask = correct_mask & conf_mask
+                    idx = input_indices[mask]
                     now_predictions[idx] = logits[mask] * args.beta + now_predictions[idx] * (1 - args.beta)
                     gate_pct_accum += mask.float().mean().item() * 100
                 # confidence gate: update only when max softmax > tau_t (linearly decayed).
