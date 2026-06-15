@@ -318,19 +318,22 @@ def train(all_predictions,
                     now_predictions[idx] = (gathered_prediction[jdx].cpu().detach().float() * args.beta
                                             + now_predictions[idx] * (1 - args.beta))
             else:
-                # B2: sigmoid additive normalization — fixes v3 multiplicative ratio defect.
-                # Replaces w/w_running (bounded by 1/w_running, shrinks as w_running rises)
-                # with sigmoid((w - w_running) * scale). Dynamic range preserved throughout training.
+                # B2: tanh + per-batch rank normalization.
+                # Fix A (re-center): delta=0 → β_eff = args.beta (vanilla EMA-SKD), not 0.55.
+                # Fix B (rank): replace w_running EMA with per-batch rank — eliminates the
+                # saturation that flattened delta as w_running → 1.0 in the sigmoid variant.
                 if args.tcw_b2_sigmoid:
                     logits = outputs_S.detach().float().cpu()
                     probs = torch.softmax(logits, dim=1)
                     w = probs[torch.arange(len(targets)), targets.cpu()]
-                    w_running = 0.9 * w_running + 0.1 * w.mean().item()
+                    w_running = 0.9 * w_running + 0.1 * w.mean().item()  # logged only; unused in update
                     if epoch < args.warmup_epochs:
                         beta_eff = torch.full_like(w, args.beta)
                     else:
-                        delta = w - w_running
-                        beta_eff = args.b2_beta_min + (args.b2_beta_max - args.b2_beta_min) * torch.sigmoid(delta * args.b2_scale)
+                        w_rank = w.argsort().argsort().float() / max(len(w) - 1, 1)  # [0, 1] per batch
+                        delta = w_rank - 0.5  # symmetric in [-0.5, 0.5]
+                        amplitude = 0.5 * (args.b2_beta_max - args.b2_beta_min)
+                        beta_eff = (args.beta + amplitude * torch.tanh(delta * args.b2_scale)).clamp(args.b2_beta_min, args.b2_beta_max)
                     now_predictions[input_indices] = (
                         logits * beta_eff.unsqueeze(1) +
                         now_predictions[input_indices] * (1 - beta_eff.unsqueeze(1))
