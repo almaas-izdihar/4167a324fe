@@ -1,0 +1,443 @@
+[2026-06-15 10:14:19,152] [main] Namespace(experiment_type='05_proposed', lr=0.1, weight=4.0, weight2=1.0, lr_decay_rate=0.1, lr_decay_schedule=[100, 150], weight_decay=0.0001, start_epoch=0, end_epoch=135, EHSKD=True, mult_sample=False, batch_size=128, experiments_dir='models', classifier_type='ResNet18', data_path='/content/data', data_type='cifar100', saveckp_freq=10, rank=-1, world_size=1, dist_backend='nccl', dist_url='tcp://127.0.0.1:8080', workers=2, multiprocessing_distributed=False, resume=None, beta=0.5, confidence_gate=False, tau_max=0.7, tau_min=0.1, correct_gate=False, hard_gate=False, soft_weight=False, true_class_weight=False, tcw_b2_sigmoid=True, b2_scale=10.0, b2_beta_min=0.1, b2_beta_max=1.0, warmup_epochs=10, seed=2024, distributed=False, ngpus_per_node=1, gpu=0)
+[2026-06-15 10:14:45,963] [train] [Epoch 0] [EHSKD True] [lr 1.0e-01] [train_loss 3.905] [train_top1_acc 10.260] [train_top5_acc 30.752] [correct/total 5128/50000] [gate 0.0%] [tau 0.700] [beta_eff 0.500] [w_run 0.069]
+[2026-06-15 10:14:49,293] [val] [Epoch 0] [val_loss 3.481] [val_top1_acc 15.870] [val_top5_acc 42.680] [ECE 3.147] [AURC 732.244] [EAURC 183.028] [correct/total 1587/10000]
+[2026-06-15 10:14:49,305] [best] 
+###########################
+best:15.87
+###########################
+[2026-06-15 10:15:25,619] [train] [Epoch 1] [EHSKD True] [lr 1.0e-01] [train_loss 8.069] [train_top1_acc 19.066] [train_top5_acc 46.890] [correct/total 9533/50000] [gate 0.0%] [tau 0.696] [beta_eff 0.500] [w_run 0.059]
+[2026-06-15 10:15:28,738] [val] [Epoch 1] [val_loss 3.338] [val_top1_acc 22.550] [val_top5_acc 52.100] [ECE 8.793] [AURC 623.602] [EAURC 184.931] [correct/total 2255/10000]
+[2026-06-15 10:15:28,762] [best] 
+###########################
+best:22.55
+###########################
+[2026-06-15 10:16:05,537] [train] [Epoch 2] [EHSKD True] [lr 1.0e-01] [train_loss 7.226] [train_top1_acc 26.988] [train_top5_acc 58.236] [correct/total 13493/50000] [gate 0.0%] [tau 0.691] [beta_eff 0.500] [w_run 0.102]
+[2026-06-15 10:16:09,129] [val] [Epoch 2] [val_loss 2.976] [val_top1_acc 29.840] [val_top5_acc 61.870] [ECE 10.907] [AURC 513.845] [EAURC 173.071] [correct/total 2984/10000]
+[2026-06-15 10:16:09,150] [best] 
+###########################
+best:29.84
+###########################
+[2026-06-15 10:16:46,363] [train] [Epoch 3] [EHSKD True] [lr 1.0e-01] [train_loss 6.609] [train_top1_acc 34.834] [train_top5_acc 66.550] [correct/total 17417/50000] [gate 0.0%] [tau 0.687] [beta_eff 0.500] [w_run 0.137]
+[2026-06-15 10:16:50,214] [val] [Epoch 3] [val_loss 2.630] [val_top1_acc 38.200] [val_top5_acc 69.450] [ECE 14.567] [AURC 395.316] [EAURC 144.897] [correct/total 3820/10000]
+[2026-06-15 10:16:50,227] [best] 
+###########################
+best:38.2
+###########################
+[2026-06-15 10:17:28,119] [train] [Epoch 4] [EHSKD True] [lr 1.0e-01] [train_loss 6.064] [train_top1_acc 41.568] [train_top5_acc 73.436] [correct/total 20783/50000] [gate 0.0%] [tau 0.682] [beta_eff 0.500] [w_run 0.183]
+[2026-06-15 10:17:31,109] [val] [Epoch 4] [val_loss 2.432] [val_top1_acc 41.640] [val_top5_acc 74.070] [ECE 14.080] [AURC 356.335] [EAURC 137.518] [correct/total 4164/10000]
+[2026-06-15 10:17:31,121] [best] 
+###########################
+best:41.64
+###########################
+[2026-06-15 10:18:09,482] [train] [Epoch 5] [EHSKD True] [lr 1.0e-01] [train_loss 5.543] [train_top1_acc 47.120] [train_top5_acc 78.200] [correct/total 23558/50000] [gate 0.0%] [tau 0.678] [beta_eff 0.500] [w_run 0.234]
+[2026-06-15 10:18:12,416] [val] [Epoch 5] [val_loss 2.286] [val_top1_acc 45.760] [val_top5_acc 75.890] [ECE 14.766] [AURC 313.965] [EAURC 129.271] [correct/total 4576/10000]
+[2026-06-15 10:18:12,428] [best] 
+###########################
+best:45.76
+###########################
+[2026-06-15 10:18:51,078] [train] [Epoch 6] [EHSKD True] [lr 1.0e-01] [train_loss 5.198] [train_top1_acc 52.070] [train_top5_acc 82.060] [correct/total 26033/50000] [gate 0.0%] [tau 0.673] [beta_eff 0.500] [w_run 0.271]
+[2026-06-15 10:18:54,030] [val] [Epoch 6] [val_loss 2.045] [val_top1_acc 50.610] [val_top5_acc 80.440] [ECE 13.843] [AURC 257.005] [EAURC 107.745] [correct/total 5061/10000]
+[2026-06-15 10:18:54,043] [best] 
+###########################
+best:50.61
+###########################
+[2026-06-15 10:19:32,808] [train] [Epoch 7] [EHSKD True] [lr 1.0e-01] [train_loss 4.834] [train_top1_acc 56.338] [train_top5_acc 85.004] [correct/total 28169/50000] [gate 0.0%] [tau 0.669] [beta_eff 0.500] [w_run 0.329]
+[2026-06-15 10:19:36,282] [val] [Epoch 7] [val_loss 1.893] [val_top1_acc 54.050] [val_top5_acc 82.950] [ECE 14.271] [AURC 227.789] [EAURC 100.814] [correct/total 5405/10000]
+[2026-06-15 10:19:36,305] [best] 
+###########################
+best:54.05
+###########################
+[2026-06-15 10:20:15,439] [train] [Epoch 8] [EHSKD True] [lr 1.0e-01] [train_loss 4.609] [train_top1_acc 60.172] [train_top5_acc 87.214] [correct/total 30085/50000] [gate 0.0%] [tau 0.664] [beta_eff 0.500] [w_run 0.345]
+[2026-06-15 10:20:18,698] [val] [Epoch 8] [val_loss 1.725] [val_top1_acc 56.410] [val_top5_acc 84.340] [ECE 10.745] [AURC 197.988] [EAURC 85.027] [correct/total 5641/10000]
+[2026-06-15 10:20:18,711] [best] 
+###########################
+best:56.41
+###########################
+[2026-06-15 10:20:57,756] [train] [Epoch 9] [EHSKD True] [lr 1.0e-01] [train_loss 4.371] [train_top1_acc 63.240] [train_top5_acc 89.018] [correct/total 31622/50000] [gate 0.0%] [tau 0.660] [beta_eff 0.500] [w_run 0.379]
+[2026-06-15 10:21:00,713] [val] [Epoch 9] [val_loss 1.663] [val_top1_acc 59.320] [val_top5_acc 86.410] [ECE 14.000] [AURC 177.005] [EAURC 79.968] [correct/total 5932/10000]
+[2026-06-15 10:21:00,727] [best] 
+###########################
+best:59.32
+###########################
+[2026-06-15 10:21:39,899] [train] [Epoch 10] [EHSKD True] [lr 1.0e-01] [train_loss 4.180] [train_top1_acc 66.066] [train_top5_acc 90.616] [correct/total 33035/50000] [gate 0.0%] [tau 0.655] [beta_eff 0.515] [w_run 0.413]
+[2026-06-15 10:21:42,893] [val] [Epoch 10] [val_loss 1.590] [val_top1_acc 60.130] [val_top5_acc 86.310] [ECE 10.837] [AURC 173.139] [EAURC 80.278] [correct/total 6013/10000]
+[2026-06-15 10:21:42,905] [best] 
+###########################
+best:60.13
+###########################
+[2026-06-15 10:22:21,899] [train] [Epoch 11] [EHSKD True] [lr 1.0e-01] [train_loss 4.114] [train_top1_acc 68.058] [train_top5_acc 91.584] [correct/total 34033/50000] [gate 0.0%] [tau 0.651] [beta_eff 0.515] [w_run 0.446]
+[2026-06-15 10:22:25,919] [val] [Epoch 11] [val_loss 1.512] [val_top1_acc 61.750] [val_top5_acc 87.530] [ECE 10.387] [AURC 155.098] [EAURC 70.261] [correct/total 6175/10000]
+[2026-06-15 10:22:25,931] [best] 
+###########################
+best:61.75
+###########################
+[2026-06-15 10:23:04,824] [train] [Epoch 12] [EHSKD True] [lr 1.0e-01] [train_loss 4.063] [train_top1_acc 69.826] [train_top5_acc 92.566] [correct/total 34912/50000] [gate 0.0%] [tau 0.646] [beta_eff 0.515] [w_run 0.474]
+[2026-06-15 10:23:07,790] [val] [Epoch 12] [val_loss 1.527] [val_top1_acc 61.580] [val_top5_acc 87.530] [ECE 10.534] [AURC 160.732] [EAURC 75.073] [correct/total 6158/10000]
+[2026-06-15 10:23:47,067] [train] [Epoch 13] [EHSKD True] [lr 1.0e-01] [train_loss 3.910] [train_top1_acc 71.812] [train_top5_acc 93.324] [correct/total 35906/50000] [gate 0.0%] [tau 0.642] [beta_eff 0.515] [w_run 0.503]
+[2026-06-15 10:23:50,149] [val] [Epoch 13] [val_loss 1.418] [val_top1_acc 63.810] [val_top5_acc 88.360] [ECE 8.607] [AURC 142.155] [EAURC 66.909] [correct/total 6381/10000]
+[2026-06-15 10:23:50,164] [best] 
+###########################
+best:63.81
+###########################
+[2026-06-15 10:24:29,545] [train] [Epoch 14] [EHSKD True] [lr 1.0e-01] [train_loss 3.878] [train_top1_acc 73.546] [train_top5_acc 93.946] [correct/total 36766/50000] [gate 0.0%] [tau 0.637] [beta_eff 0.515] [w_run 0.519]
+[2026-06-15 10:24:32,809] [val] [Epoch 14] [val_loss 1.442] [val_top1_acc 63.250] [val_top5_acc 88.270] [ECE 8.818] [AURC 147.989] [EAURC 70.203] [correct/total 6325/10000]
+[2026-06-15 10:25:11,895] [train] [Epoch 15] [EHSKD True] [lr 1.0e-01] [train_loss 3.787] [train_top1_acc 74.964] [train_top5_acc 94.552] [correct/total 37480/50000] [gate 0.0%] [tau 0.633] [beta_eff 0.515] [w_run 0.539]
+[2026-06-15 10:25:15,635] [val] [Epoch 15] [val_loss 1.332] [val_top1_acc 65.770] [val_top5_acc 89.420] [ECE 7.528] [AURC 129.720] [EAURC 62.983] [correct/total 6577/10000]
+[2026-06-15 10:25:15,648] [best] 
+###########################
+best:65.77
+###########################
+[2026-06-15 10:25:54,647] [train] [Epoch 16] [EHSKD True] [lr 1.0e-01] [train_loss 3.633] [train_top1_acc 76.514] [train_top5_acc 95.130] [correct/total 38259/50000] [gate 0.0%] [tau 0.628] [beta_eff 0.515] [w_run 0.561]
+[2026-06-15 10:25:57,654] [val] [Epoch 16] [val_loss 1.307] [val_top1_acc 65.960] [val_top5_acc 89.880] [ECE 6.122] [AURC 126.964] [EAURC 61.021] [correct/total 6596/10000]
+[2026-06-15 10:25:57,668] [best] 
+###########################
+best:65.96
+###########################
+[2026-06-15 10:26:36,614] [train] [Epoch 17] [EHSKD True] [lr 1.0e-01] [train_loss 3.608] [train_top1_acc 77.460] [train_top5_acc 95.494] [correct/total 38731/50000] [gate 0.0%] [tau 0.624] [beta_eff 0.515] [w_run 0.567]
+[2026-06-15 10:26:39,609] [val] [Epoch 17] [val_loss 1.278] [val_top1_acc 66.660] [val_top5_acc 90.160] [ECE 6.554] [AURC 124.637] [EAURC 61.570] [correct/total 6666/10000]
+[2026-06-15 10:26:39,621] [best] 
+###########################
+best:66.66
+###########################
+[2026-06-15 10:27:18,701] [train] [Epoch 18] [EHSKD True] [lr 1.0e-01] [train_loss 3.483] [train_top1_acc 78.848] [train_top5_acc 95.976] [correct/total 39427/50000] [gate 0.0%] [tau 0.619] [beta_eff 0.515] [w_run 0.599]
+[2026-06-15 10:27:21,946] [val] [Epoch 18] [val_loss 1.351] [val_top1_acc 65.250] [val_top5_acc 89.100] [ECE 6.893] [AURC 132.415] [EAURC 63.479] [correct/total 6525/10000]
+[2026-06-15 10:28:00,776] [train] [Epoch 19] [EHSKD True] [lr 1.0e-01] [train_loss 3.514] [train_top1_acc 79.902] [train_top5_acc 96.238] [correct/total 39951/50000] [gate 0.0%] [tau 0.615] [beta_eff 0.515] [w_run 0.593]
+[2026-06-15 10:28:04,519] [val] [Epoch 19] [val_loss 1.238] [val_top1_acc 67.520] [val_top5_acc 90.750] [ECE 5.270] [AURC 118.055] [EAURC 58.422] [correct/total 6752/10000]
+[2026-06-15 10:28:04,531] [best] 
+###########################
+best:67.52
+###########################
+[2026-06-15 10:28:43,907] [train] [Epoch 20] [EHSKD True] [lr 1.0e-01] [train_loss 3.385] [train_top1_acc 81.040] [train_top5_acc 96.606] [correct/total 40518/50000] [gate 0.0%] [tau 0.610] [beta_eff 0.515] [w_run 0.610]
+[2026-06-15 10:28:46,881] [val] [Epoch 20] [val_loss 1.261] [val_top1_acc 67.790] [val_top5_acc 90.490] [ECE 6.076] [AURC 116.248] [EAURC 57.669] [correct/total 6779/10000]
+[2026-06-15 10:28:46,893] [best] 
+###########################
+best:67.79
+###########################
+[2026-06-15 10:29:26,166] [train] [Epoch 21] [EHSKD True] [lr 1.0e-01] [train_loss 3.325] [train_top1_acc 81.792] [train_top5_acc 96.894] [correct/total 40896/50000] [gate 0.0%] [tau 0.606] [beta_eff 0.515] [w_run 0.618]
+[2026-06-15 10:29:29,138] [val] [Epoch 21] [val_loss 1.250] [val_top1_acc 67.800] [val_top5_acc 90.770] [ECE 6.019] [AURC 118.037] [EAURC 59.497] [correct/total 6780/10000]
+[2026-06-15 10:29:29,150] [best] 
+###########################
+best:67.8
+###########################
+[2026-06-15 10:30:08,300] [train] [Epoch 22] [EHSKD True] [lr 1.0e-01] [train_loss 3.381] [train_top1_acc 82.590] [train_top5_acc 97.030] [correct/total 41297/50000] [gate 0.0%] [tau 0.601] [beta_eff 0.515] [w_run 0.633]
+[2026-06-15 10:30:11,714] [val] [Epoch 22] [val_loss 1.220] [val_top1_acc 67.730] [val_top5_acc 90.810] [ECE 2.987] [AURC 115.854] [EAURC 57.042] [correct/total 6773/10000]
+[2026-06-15 10:30:50,669] [train] [Epoch 23] [EHSKD True] [lr 1.0e-01] [train_loss 3.353] [train_top1_acc 83.330] [train_top5_acc 97.336] [correct/total 41667/50000] [gate 0.0%] [tau 0.597] [beta_eff 0.515] [w_run 0.633]
+[2026-06-15 10:30:54,278] [val] [Epoch 23] [val_loss 1.188] [val_top1_acc 69.480] [val_top5_acc 90.910] [ECE 4.883] [AURC 108.139] [EAURC 55.922] [correct/total 6948/10000]
+[2026-06-15 10:30:54,292] [best] 
+###########################
+best:69.48
+###########################
+[2026-06-15 10:31:33,275] [train] [Epoch 24] [EHSKD True] [lr 1.0e-01] [train_loss 3.249] [train_top1_acc 83.818] [train_top5_acc 97.506] [correct/total 41908/50000] [gate 0.0%] [tau 0.593] [beta_eff 0.515] [w_run 0.671]
+[2026-06-15 10:31:36,245] [val] [Epoch 24] [val_loss 1.145] [val_top1_acc 69.580] [val_top5_acc 91.440] [ECE 3.284] [AURC 102.016] [EAURC 50.163] [correct/total 6958/10000]
+[2026-06-15 10:31:36,257] [best] 
+###########################
+best:69.58
+###########################
+[2026-06-15 10:32:15,353] [train] [Epoch 25] [EHSKD True] [lr 1.0e-01] [train_loss 3.224] [train_top1_acc 84.672] [train_top5_acc 97.812] [correct/total 42337/50000] [gate 0.0%] [tau 0.588] [beta_eff 0.515] [w_run 0.674]
+[2026-06-15 10:32:18,331] [val] [Epoch 25] [val_loss 1.151] [val_top1_acc 70.050] [val_top5_acc 91.480] [ECE 4.231] [AURC 101.116] [EAURC 50.952] [correct/total 7005/10000]
+[2026-06-15 10:32:18,343] [best] 
+###########################
+best:70.05
+###########################
+[2026-06-15 10:32:57,448] [train] [Epoch 26] [EHSKD True] [lr 1.0e-01] [train_loss 3.246] [train_top1_acc 85.422] [train_top5_acc 97.990] [correct/total 42711/50000] [gate 0.0%] [tau 0.584] [beta_eff 0.515] [w_run 0.683]
+[2026-06-15 10:33:00,922] [val] [Epoch 26] [val_loss 1.137] [val_top1_acc 70.450] [val_top5_acc 91.610] [ECE 4.484] [AURC 100.288] [EAURC 51.536] [correct/total 7045/10000]
+[2026-06-15 10:33:00,946] [best] 
+###########################
+best:70.45
+###########################
+[2026-06-15 10:33:40,158] [train] [Epoch 27] [EHSKD True] [lr 1.0e-01] [train_loss 3.214] [train_top1_acc 85.948] [train_top5_acc 98.072] [correct/total 42974/50000] [gate 0.0%] [tau 0.579] [beta_eff 0.515] [w_run 0.703]
+[2026-06-15 10:33:43,565] [val] [Epoch 27] [val_loss 1.138] [val_top1_acc 69.740] [val_top5_acc 91.250] [ECE 1.970] [AURC 103.331] [EAURC 52.056] [correct/total 6974/10000]
+[2026-06-15 10:34:22,530] [train] [Epoch 28] [EHSKD True] [lr 1.0e-01] [train_loss 3.198] [train_top1_acc 86.688] [train_top5_acc 98.248] [correct/total 43346/50000] [gate 0.0%] [tau 0.575] [beta_eff 0.515] [w_run 0.692]
+[2026-06-15 10:34:25,528] [val] [Epoch 28] [val_loss 1.161] [val_top1_acc 69.490] [val_top5_acc 91.200] [ECE 3.546] [AURC 104.444] [EAURC 52.264] [correct/total 6949/10000]
+[2026-06-15 10:35:04,377] [train] [Epoch 29] [EHSKD True] [lr 1.0e-01] [train_loss 3.133] [train_top1_acc 87.138] [train_top5_acc 98.312] [correct/total 43569/50000] [gate 0.0%] [tau 0.570] [beta_eff 0.515] [w_run 0.705]
+[2026-06-15 10:35:07,360] [val] [Epoch 29] [val_loss 1.175] [val_top1_acc 69.210] [val_top5_acc 91.290] [ECE 2.906] [AURC 105.943] [EAURC 52.737] [correct/total 6921/10000]
+[2026-06-15 10:35:46,114] [train] [Epoch 30] [EHSKD True] [lr 1.0e-01] [train_loss 3.157] [train_top1_acc 87.190] [train_top5_acc 98.350] [correct/total 43597/50000] [gate 0.0%] [tau 0.566] [beta_eff 0.515] [w_run 0.718]
+[2026-06-15 10:35:49,202] [val] [Epoch 30] [val_loss 1.149] [val_top1_acc 69.960] [val_top5_acc 91.230] [ECE 2.336] [AURC 101.684] [EAURC 51.199] [correct/total 6996/10000]
+[2026-06-15 10:36:27,905] [train] [Epoch 31] [EHSKD True] [lr 1.0e-01] [train_loss 3.135] [train_top1_acc 87.902] [train_top5_acc 98.454] [correct/total 43950/50000] [gate 0.0%] [tau 0.561] [beta_eff 0.515] [w_run 0.721]
+[2026-06-15 10:36:31,522] [val] [Epoch 31] [val_loss 1.116] [val_top1_acc 71.200] [val_top5_acc 91.870] [ECE 4.893] [AURC 96.455] [EAURC 50.291] [correct/total 7120/10000]
+[2026-06-15 10:36:31,535] [best] 
+###########################
+best:71.2
+###########################
+[2026-06-15 10:37:10,445] [train] [Epoch 32] [EHSKD True] [lr 1.0e-01] [train_loss 3.048] [train_top1_acc 88.142] [train_top5_acc 98.586] [correct/total 44073/50000] [gate 0.0%] [tau 0.557] [beta_eff 0.515] [w_run 0.724]
+[2026-06-15 10:37:13,394] [val] [Epoch 32] [val_loss 1.131] [val_top1_acc 70.280] [val_top5_acc 91.500] [ECE 1.729] [AURC 101.183] [EAURC 51.834] [correct/total 7028/10000]
+[2026-06-15 10:37:52,333] [train] [Epoch 33] [EHSKD True] [lr 1.0e-01] [train_loss 3.068] [train_top1_acc 88.550] [train_top5_acc 98.600] [correct/total 44273/50000] [gate 0.0%] [tau 0.552] [beta_eff 0.515] [w_run 0.734]
+[2026-06-15 10:37:55,638] [val] [Epoch 33] [val_loss 1.108] [val_top1_acc 71.310] [val_top5_acc 92.010] [ECE 2.736] [AURC 97.547] [EAURC 51.756] [correct/total 7131/10000]
+[2026-06-15 10:37:55,651] [best] 
+###########################
+best:71.31
+###########################
+[2026-06-15 10:38:34,603] [train] [Epoch 34] [EHSKD True] [lr 1.0e-01] [train_loss 3.018] [train_top1_acc 88.708] [train_top5_acc 98.700] [correct/total 44353/50000] [gate 0.0%] [tau 0.548] [beta_eff 0.515] [w_run 0.733]
+[2026-06-15 10:38:38,004] [val] [Epoch 34] [val_loss 1.120] [val_top1_acc 70.750] [val_top5_acc 92.050] [ECE 3.409] [AURC 101.590] [EAURC 53.883] [correct/total 7075/10000]
+[2026-06-15 10:39:16,881] [train] [Epoch 35] [EHSKD True] [lr 1.0e-01] [train_loss 3.059] [train_top1_acc 89.192] [train_top5_acc 98.774] [correct/total 44595/50000] [gate 0.0%] [tau 0.543] [beta_eff 0.515] [w_run 0.745]
+[2026-06-15 10:39:20,340] [val] [Epoch 35] [val_loss 1.096] [val_top1_acc 71.240] [val_top5_acc 91.970] [ECE 2.152] [AURC 94.434] [EAURC 48.406] [correct/total 7124/10000]
+[2026-06-15 10:39:59,250] [train] [Epoch 36] [EHSKD True] [lr 1.0e-01] [train_loss 3.076] [train_top1_acc 89.412] [train_top5_acc 98.832] [correct/total 44706/50000] [gate 0.0%] [tau 0.539] [beta_eff 0.515] [w_run 0.747]
+[2026-06-15 10:40:02,235] [val] [Epoch 36] [val_loss 1.093] [val_top1_acc 71.300] [val_top5_acc 92.120] [ECE 2.081] [AURC 96.543] [EAURC 50.718] [correct/total 7130/10000]
+[2026-06-15 10:40:40,971] [train] [Epoch 37] [EHSKD True] [lr 1.0e-01] [train_loss 3.018] [train_top1_acc 89.628] [train_top5_acc 98.962] [correct/total 44815/50000] [gate 0.0%] [tau 0.534] [beta_eff 0.515] [w_run 0.759]
+[2026-06-15 10:40:43,965] [val] [Epoch 37] [val_loss 1.054] [val_top1_acc 71.660] [val_top5_acc 92.500] [ECE 1.256] [AURC 92.975] [EAURC 48.359] [correct/total 7166/10000]
+[2026-06-15 10:40:43,977] [best] 
+###########################
+best:71.66
+###########################
+[2026-06-15 10:41:22,773] [train] [Epoch 38] [EHSKD True] [lr 1.0e-01] [train_loss 3.004] [train_top1_acc 89.818] [train_top5_acc 98.856] [correct/total 44910/50000] [gate 0.0%] [tau 0.530] [beta_eff 0.515] [w_run 0.771]
+[2026-06-15 10:41:25,966] [val] [Epoch 38] [val_loss 1.081] [val_top1_acc 71.720] [val_top5_acc 92.070] [ECE 2.040] [AURC 95.215] [EAURC 50.798] [correct/total 7172/10000]
+[2026-06-15 10:41:25,988] [best] 
+###########################
+best:71.72
+###########################
+[2026-06-15 10:42:05,080] [train] [Epoch 39] [EHSKD True] [lr 1.0e-01] [train_loss 3.076] [train_top1_acc 89.942] [train_top5_acc 98.992] [correct/total 44970/50000] [gate 0.0%] [tau 0.525] [beta_eff 0.515] [w_run 0.776]
+[2026-06-15 10:42:08,623] [val] [Epoch 39] [val_loss 1.103] [val_top1_acc 71.500] [val_top5_acc 91.550] [ECE 1.487] [AURC 92.731] [EAURC 47.580] [correct/total 7150/10000]
+[2026-06-15 10:42:47,679] [train] [Epoch 40] [EHSKD True] [lr 1.0e-01] [train_loss 3.069] [train_top1_acc 90.096] [train_top5_acc 99.028] [correct/total 45047/50000] [gate 0.0%] [tau 0.521] [beta_eff 0.515] [w_run 0.766]
+[2026-06-15 10:42:50,808] [val] [Epoch 40] [val_loss 1.064] [val_top1_acc 71.890] [val_top5_acc 92.530] [ECE 1.801] [AURC 95.080] [EAURC 51.226] [correct/total 7189/10000]
+[2026-06-15 10:42:50,822] [best] 
+###########################
+best:71.89
+###########################
+[2026-06-15 10:43:29,870] [train] [Epoch 41] [EHSKD True] [lr 1.0e-01] [train_loss 2.996] [train_top1_acc 90.498] [train_top5_acc 99.076] [correct/total 45249/50000] [gate 0.0%] [tau 0.516] [beta_eff 0.515] [w_run 0.783]
+[2026-06-15 10:43:32,853] [val] [Epoch 41] [val_loss 1.078] [val_top1_acc 71.910] [val_top5_acc 92.380] [ECE 2.286] [AURC 93.764] [EAURC 49.976] [correct/total 7191/10000]
+[2026-06-15 10:43:32,867] [best] 
+###########################
+best:71.91
+###########################
+[2026-06-15 10:44:11,763] [train] [Epoch 42] [EHSKD True] [lr 1.0e-01] [train_loss 3.104] [train_top1_acc 90.612] [train_top5_acc 99.100] [correct/total 45306/50000] [gate 0.0%] [tau 0.512] [beta_eff 0.515] [w_run 0.769]
+[2026-06-15 10:44:15,254] [val] [Epoch 42] [val_loss 1.039] [val_top1_acc 72.560] [val_top5_acc 92.400] [ECE 1.682] [AURC 87.939] [EAURC 46.266] [correct/total 7256/10000]
+[2026-06-15 10:44:15,274] [best] 
+###########################
+best:72.56
+###########################
+[2026-06-15 10:44:54,271] [train] [Epoch 43] [EHSKD True] [lr 1.0e-01] [train_loss 3.091] [train_top1_acc 90.826] [train_top5_acc 99.114] [correct/total 45411/50000] [gate 0.0%] [tau 0.507] [beta_eff 0.515] [w_run 0.787]
+[2026-06-15 10:44:57,507] [val] [Epoch 43] [val_loss 1.074] [val_top1_acc 71.460] [val_top5_acc 92.000] [ECE 1.522] [AURC 92.183] [EAURC 46.897] [correct/total 7146/10000]
+[2026-06-15 10:45:36,138] [train] [Epoch 44] [EHSKD True] [lr 1.0e-01] [train_loss 3.071] [train_top1_acc 90.756] [train_top5_acc 99.142] [correct/total 45378/50000] [gate 0.0%] [tau 0.503] [beta_eff 0.515] [w_run 0.774]
+[2026-06-15 10:45:39,072] [val] [Epoch 44] [val_loss 1.112] [val_top1_acc 70.750] [val_top5_acc 91.580] [ECE 1.849] [AURC 101.165] [EAURC 53.458] [correct/total 7075/10000]
+[2026-06-15 10:46:17,730] [train] [Epoch 45] [EHSKD True] [lr 1.0e-01] [train_loss 3.212] [train_top1_acc 90.700] [train_top5_acc 99.122] [correct/total 45351/50000] [gate 0.0%] [tau 0.499] [beta_eff 0.515] [w_run 0.794]
+[2026-06-15 10:46:20,672] [val] [Epoch 45] [val_loss 1.063] [val_top1_acc 72.320] [val_top5_acc 92.450] [ECE 2.285] [AURC 93.615] [EAURC 51.168] [correct/total 7232/10000]
+[2026-06-15 10:46:59,322] [train] [Epoch 46] [EHSKD True] [lr 1.0e-01] [train_loss 3.134] [train_top1_acc 90.848] [train_top5_acc 99.242] [correct/total 45421/50000] [gate 0.0%] [tau 0.494] [beta_eff 0.515] [w_run 0.793]
+[2026-06-15 10:47:02,462] [val] [Epoch 46] [val_loss 1.049] [val_top1_acc 72.420] [val_top5_acc 92.180] [ECE 2.248] [AURC 89.401] [EAURC 47.277] [correct/total 7242/10000]
+[2026-06-15 10:47:41,333] [train] [Epoch 47] [EHSKD True] [lr 1.0e-01] [train_loss 3.075] [train_top1_acc 91.128] [train_top5_acc 99.184] [correct/total 45565/50000] [gate 0.0%] [tau 0.490] [beta_eff 0.515] [w_run 0.798]
+[2026-06-15 10:47:45,002] [val] [Epoch 47] [val_loss 1.059] [val_top1_acc 72.050] [val_top5_acc 92.370] [ECE 2.593] [AURC 91.122] [EAURC 47.795] [correct/total 7205/10000]
+[2026-06-15 10:48:23,699] [train] [Epoch 48] [EHSKD True] [lr 1.0e-01] [train_loss 3.131] [train_top1_acc 91.074] [train_top5_acc 99.182] [correct/total 45538/50000] [gate 0.0%] [tau 0.485] [beta_eff 0.515] [w_run 0.796]
+[2026-06-15 10:48:26,638] [val] [Epoch 48] [val_loss 1.095] [val_top1_acc 71.210] [val_top5_acc 92.020] [ECE 1.769] [AURC 96.514] [EAURC 50.384] [correct/total 7121/10000]
+[2026-06-15 10:49:05,384] [train] [Epoch 49] [EHSKD True] [lr 1.0e-01] [train_loss 3.098] [train_top1_acc 90.994] [train_top5_acc 99.240] [correct/total 45497/50000] [gate 0.0%] [tau 0.481] [beta_eff 0.515] [w_run 0.813]
+[2026-06-15 10:49:08,505] [val] [Epoch 49] [val_loss 1.055] [val_top1_acc 72.250] [val_top5_acc 92.420] [ECE 1.770] [AURC 90.075] [EAURC 47.401] [correct/total 7225/10000]
+[2026-06-15 10:49:47,291] [train] [Epoch 50] [EHSKD True] [lr 1.0e-01] [train_loss 3.282] [train_top1_acc 91.672] [train_top5_acc 99.242] [correct/total 45833/50000] [gate 0.0%] [tau 0.476] [beta_eff 0.515] [w_run 0.804]
+[2026-06-15 10:49:50,625] [val] [Epoch 50] [val_loss 1.081] [val_top1_acc 71.590] [val_top5_acc 92.160] [ECE 2.557] [AURC 95.278] [EAURC 50.428] [correct/total 7159/10000]
+[2026-06-15 10:50:29,359] [train] [Epoch 51] [EHSKD True] [lr 1.0e-01] [train_loss 3.221] [train_top1_acc 91.312] [train_top5_acc 99.224] [correct/total 45656/50000] [gate 0.0%] [tau 0.472] [beta_eff 0.515] [w_run 0.807]
+[2026-06-15 10:50:32,657] [val] [Epoch 51] [val_loss 1.071] [val_top1_acc 70.970] [val_top5_acc 92.220] [ECE 4.368] [AURC 95.669] [EAURC 48.720] [correct/total 7097/10000]
+[2026-06-15 10:51:11,300] [train] [Epoch 52] [EHSKD True] [lr 1.0e-01] [train_loss 3.188] [train_top1_acc 91.326] [train_top5_acc 99.250] [correct/total 45663/50000] [gate 0.0%] [tau 0.467] [beta_eff 0.515] [w_run 0.811]
+[2026-06-15 10:51:14,321] [val] [Epoch 52] [val_loss 1.066] [val_top1_acc 71.990] [val_top5_acc 92.410] [ECE 1.999] [AURC 92.753] [EAURC 49.229] [correct/total 7199/10000]
+[2026-06-15 10:51:52,986] [train] [Epoch 53] [EHSKD True] [lr 1.0e-01] [train_loss 3.236] [train_top1_acc 91.726] [train_top5_acc 99.280] [correct/total 45864/50000] [gate 0.0%] [tau 0.463] [beta_eff 0.515] [w_run 0.828]
+[2026-06-15 10:51:55,956] [val] [Epoch 53] [val_loss 1.056] [val_top1_acc 72.500] [val_top5_acc 92.370] [ECE 2.170] [AURC 92.092] [EAURC 50.227] [correct/total 7250/10000]
+[2026-06-15 10:52:34,685] [train] [Epoch 54] [EHSKD True] [lr 1.0e-01] [train_loss 3.260] [train_top1_acc 91.518] [train_top5_acc 99.236] [correct/total 45759/50000] [gate 0.0%] [tau 0.458] [beta_eff 0.515] [w_run 0.818]
+[2026-06-15 10:52:37,832] [val] [Epoch 54] [val_loss 1.081] [val_top1_acc 71.800] [val_top5_acc 92.080] [ECE 4.366] [AURC 97.384] [EAURC 53.233] [correct/total 7180/10000]
+[2026-06-15 10:53:16,603] [train] [Epoch 55] [EHSKD True] [lr 1.0e-01] [train_loss 3.251] [train_top1_acc 91.694] [train_top5_acc 99.308] [correct/total 45847/50000] [gate 0.0%] [tau 0.454] [beta_eff 0.515] [w_run 0.824]
+[2026-06-15 10:53:20,278] [val] [Epoch 55] [val_loss 1.046] [val_top1_acc 72.410] [val_top5_acc 92.050] [ECE 2.774] [AURC 87.578] [EAURC 45.423] [correct/total 7241/10000]
+[2026-06-15 10:53:59,075] [train] [Epoch 56] [EHSKD True] [lr 1.0e-01] [train_loss 3.200] [train_top1_acc 91.964] [train_top5_acc 99.298] [correct/total 45984/50000] [gate 0.0%] [tau 0.449] [beta_eff 0.515] [w_run 0.830]
+[2026-06-15 10:54:02,038] [val] [Epoch 56] [val_loss 1.061] [val_top1_acc 72.050] [val_top5_acc 92.280] [ECE 2.838] [AURC 90.671] [EAURC 47.344] [correct/total 7205/10000]
+[2026-06-15 10:54:40,871] [train] [Epoch 57] [EHSKD True] [lr 1.0e-01] [train_loss 3.203] [train_top1_acc 91.972] [train_top5_acc 99.326] [correct/total 45985/50000] [gate 0.0%] [tau 0.445] [beta_eff 0.515] [w_run 0.824]
+[2026-06-15 10:54:44,037] [val] [Epoch 57] [val_loss 1.056] [val_top1_acc 72.240] [val_top5_acc 92.400] [ECE 4.303] [AURC 91.412] [EAURC 48.705] [correct/total 7224/10000]
+[2026-06-15 10:55:22,888] [train] [Epoch 58] [EHSKD True] [lr 1.0e-01] [train_loss 3.267] [train_top1_acc 91.986] [train_top5_acc 99.350] [correct/total 45994/50000] [gate 0.0%] [tau 0.440] [beta_eff 0.515] [w_run 0.824]
+[2026-06-15 10:55:25,872] [val] [Epoch 58] [val_loss 1.068] [val_top1_acc 72.140] [val_top5_acc 92.170] [ECE 2.477] [AURC 91.143] [EAURC 48.110] [correct/total 7214/10000]
+[2026-06-15 10:56:04,707] [train] [Epoch 59] [EHSKD True] [lr 1.0e-01] [train_loss 3.318] [train_top1_acc 91.974] [train_top5_acc 99.360] [correct/total 45988/50000] [gate 0.0%] [tau 0.436] [beta_eff 0.515] [w_run 0.822]
+[2026-06-15 10:56:08,609] [val] [Epoch 59] [val_loss 1.089] [val_top1_acc 71.810] [val_top5_acc 92.010] [ECE 3.248] [AURC 96.254] [EAURC 52.136] [correct/total 7181/10000]
+[2026-06-15 10:56:47,530] [train] [Epoch 60] [EHSKD True] [lr 1.0e-01] [train_loss 3.293] [train_top1_acc 91.888] [train_top5_acc 99.362] [correct/total 45945/50000] [gate 0.0%] [tau 0.431] [beta_eff 0.515] [w_run 0.825]
+[2026-06-15 10:56:50,500] [val] [Epoch 60] [val_loss 1.057] [val_top1_acc 72.360] [val_top5_acc 92.550] [ECE 4.658] [AURC 91.491] [EAURC 49.173] [correct/total 7236/10000]
+[2026-06-15 10:57:29,179] [train] [Epoch 61] [EHSKD True] [lr 1.0e-01] [train_loss 3.423] [train_top1_acc 91.744] [train_top5_acc 99.352] [correct/total 45870/50000] [gate 0.0%] [tau 0.427] [beta_eff 0.515] [w_run 0.828]
+[2026-06-15 10:57:32,144] [val] [Epoch 61] [val_loss 1.031] [val_top1_acc 72.810] [val_top5_acc 92.740] [ECE 2.106] [AURC 86.480] [EAURC 45.604] [correct/total 7281/10000]
+[2026-06-15 10:57:32,157] [best] 
+###########################
+best:72.81
+###########################
+[2026-06-15 10:58:11,069] [train] [Epoch 62] [EHSKD True] [lr 1.0e-01] [train_loss 3.409] [train_top1_acc 92.196] [train_top5_acc 99.366] [correct/total 46099/50000] [gate 0.0%] [tau 0.422] [beta_eff 0.515] [w_run 0.833]
+[2026-06-15 10:58:14,019] [val] [Epoch 62] [val_loss 1.051] [val_top1_acc 72.220] [val_top5_acc 92.370] [ECE 4.204] [AURC 89.727] [EAURC 46.955] [correct/total 7222/10000]
+[2026-06-15 10:58:52,796] [train] [Epoch 63] [EHSKD True] [lr 1.0e-01] [train_loss 3.271] [train_top1_acc 92.040] [train_top5_acc 99.342] [correct/total 46020/50000] [gate 0.0%] [tau 0.418] [beta_eff 0.515] [w_run 0.834]
+[2026-06-15 10:58:56,536] [val] [Epoch 63] [val_loss 1.077] [val_top1_acc 72.230] [val_top5_acc 91.990] [ECE 5.031] [AURC 93.150] [EAURC 50.411] [correct/total 7223/10000]
+[2026-06-15 10:59:35,344] [train] [Epoch 64] [EHSKD True] [lr 1.0e-01] [train_loss 3.325] [train_top1_acc 92.096] [train_top5_acc 99.338] [correct/total 46049/50000] [gate 0.0%] [tau 0.413] [beta_eff 0.515] [w_run 0.831]
+[2026-06-15 10:59:38,323] [val] [Epoch 64] [val_loss 1.067] [val_top1_acc 72.160] [val_top5_acc 92.170] [ECE 2.583] [AURC 95.396] [EAURC 52.429] [correct/total 7216/10000]
+[2026-06-15 11:00:17,047] [train] [Epoch 65] [EHSKD True] [lr 1.0e-01] [train_loss 3.275] [train_top1_acc 92.354] [train_top5_acc 99.412] [correct/total 46177/50000] [gate 0.0%] [tau 0.409] [beta_eff 0.515] [w_run 0.834]
+[2026-06-15 11:00:20,176] [val] [Epoch 65] [val_loss 1.015] [val_top1_acc 73.160] [val_top5_acc 92.910] [ECE 4.380] [AURC 85.592] [EAURC 45.819] [correct/total 7316/10000]
+[2026-06-15 11:00:20,189] [best] 
+###########################
+best:73.16
+###########################
+[2026-06-15 11:00:59,212] [train] [Epoch 66] [EHSKD True] [lr 1.0e-01] [train_loss 3.248] [train_top1_acc 92.448] [train_top5_acc 99.414] [correct/total 46224/50000] [gate 0.0%] [tau 0.404] [beta_eff 0.515] [w_run 0.848]
+[2026-06-15 11:01:02,208] [val] [Epoch 66] [val_loss 1.069] [val_top1_acc 72.170] [val_top5_acc 92.440] [ECE 2.046] [AURC 93.365] [EAURC 50.430] [correct/total 7217/10000]
+[2026-06-15 11:01:41,067] [train] [Epoch 67] [EHSKD True] [lr 1.0e-01] [train_loss 3.380] [train_top1_acc 92.478] [train_top5_acc 99.430] [correct/total 46240/50000] [gate 0.0%] [tau 0.400] [beta_eff 0.515] [w_run 0.848]
+[2026-06-15 11:01:44,730] [val] [Epoch 67] [val_loss 1.043] [val_top1_acc 72.380] [val_top5_acc 92.690] [ECE 5.129] [AURC 89.101] [EAURC 46.848] [correct/total 7238/10000]
+[2026-06-15 11:02:23,565] [train] [Epoch 68] [EHSKD True] [lr 1.0e-01] [train_loss 3.494] [train_top1_acc 92.288] [train_top5_acc 99.422] [correct/total 46143/50000] [gate 0.0%] [tau 0.396] [beta_eff 0.515] [w_run 0.846]
+[2026-06-15 11:02:26,709] [val] [Epoch 68] [val_loss 1.098] [val_top1_acc 71.540] [val_top5_acc 91.940] [ECE 5.169] [AURC 97.421] [EAURC 52.404] [correct/total 7154/10000]
+[2026-06-15 11:03:05,276] [train] [Epoch 69] [EHSKD True] [lr 1.0e-01] [train_loss 3.415] [train_top1_acc 92.280] [train_top5_acc 99.378] [correct/total 46139/50000] [gate 0.0%] [tau 0.391] [beta_eff 0.515] [w_run 0.833]
+[2026-06-15 11:03:08,242] [val] [Epoch 69] [val_loss 1.061] [val_top1_acc 72.340] [val_top5_acc 92.280] [ECE 6.649] [AURC 88.054] [EAURC 45.672] [correct/total 7234/10000]
+[2026-06-15 11:03:47,018] [train] [Epoch 70] [EHSKD True] [lr 1.0e-01] [train_loss 3.480] [train_top1_acc 92.066] [train_top5_acc 99.368] [correct/total 46031/50000] [gate 0.0%] [tau 0.387] [beta_eff 0.515] [w_run 0.844]
+[2026-06-15 11:03:50,016] [val] [Epoch 70] [val_loss 1.081] [val_top1_acc 71.660] [val_top5_acc 92.380] [ECE 3.345] [AURC 96.689] [EAURC 52.073] [correct/total 7166/10000]
+[2026-06-15 11:04:28,705] [train] [Epoch 71] [EHSKD True] [lr 1.0e-01] [train_loss 3.439] [train_top1_acc 92.330] [train_top5_acc 99.372] [correct/total 46165/50000] [gate 0.0%] [tau 0.382] [beta_eff 0.515] [w_run 0.846]
+[2026-06-15 11:04:32,095] [val] [Epoch 71] [val_loss 1.044] [val_top1_acc 72.810] [val_top5_acc 92.710] [ECE 5.855] [AURC 89.412] [EAURC 48.537] [correct/total 7281/10000]
+[2026-06-15 11:05:10,888] [train] [Epoch 72] [EHSKD True] [lr 1.0e-01] [train_loss 3.599] [train_top1_acc 92.204] [train_top5_acc 99.406] [correct/total 46101/50000] [gate 0.0%] [tau 0.378] [beta_eff 0.515] [w_run 0.846]
+[2026-06-15 11:05:14,228] [val] [Epoch 72] [val_loss 1.079] [val_top1_acc 71.520] [val_top5_acc 92.310] [ECE 3.516] [AURC 95.140] [EAURC 50.056] [correct/total 7152/10000]
+[2026-06-15 11:05:52,839] [train] [Epoch 73] [EHSKD True] [lr 1.0e-01] [train_loss 3.503] [train_top1_acc 92.322] [train_top5_acc 99.380] [correct/total 46163/50000] [gate 0.0%] [tau 0.373] [beta_eff 0.515] [w_run 0.853]
+[2026-06-15 11:05:55,778] [val] [Epoch 73] [val_loss 1.039] [val_top1_acc 72.940] [val_top5_acc 92.440] [ECE 4.961] [AURC 87.204] [EAURC 46.740] [correct/total 7294/10000]
+[2026-06-15 11:06:34,337] [train] [Epoch 74] [EHSKD True] [lr 1.0e-01] [train_loss 3.501] [train_top1_acc 92.374] [train_top5_acc 99.408] [correct/total 46188/50000] [gate 0.0%] [tau 0.369] [beta_eff 0.515] [w_run 0.851]
+[2026-06-15 11:06:37,463] [val] [Epoch 74] [val_loss 1.023] [val_top1_acc 73.420] [val_top5_acc 92.690] [ECE 3.372] [AURC 85.346] [EAURC 46.381] [correct/total 7342/10000]
+[2026-06-15 11:06:37,476] [best] 
+###########################
+best:73.42
+###########################
+[2026-06-15 11:07:16,310] [train] [Epoch 75] [EHSKD True] [lr 1.0e-01] [train_loss 3.490] [train_top1_acc 92.164] [train_top5_acc 99.352] [correct/total 46082/50000] [gate 0.0%] [tau 0.364] [beta_eff 0.515] [w_run 0.857]
+[2026-06-15 11:07:19,355] [val] [Epoch 75] [val_loss 1.030] [val_top1_acc 73.110] [val_top5_acc 92.480] [ECE 6.216] [AURC 84.851] [EAURC 44.922] [correct/total 7311/10000]
+[2026-06-15 11:07:57,917] [train] [Epoch 76] [EHSKD True] [lr 1.0e-01] [train_loss 3.610] [train_top1_acc 92.194] [train_top5_acc 99.400] [correct/total 46096/50000] [gate 0.0%] [tau 0.360] [beta_eff 0.515] [w_run 0.851]
+[2026-06-15 11:08:01,533] [val] [Epoch 76] [val_loss 1.063] [val_top1_acc 72.360] [val_top5_acc 92.600] [ECE 3.150] [AURC 93.144] [EAURC 50.827] [correct/total 7236/10000]
+[2026-06-15 11:08:40,073] [train] [Epoch 77] [EHSKD True] [lr 1.0e-01] [train_loss 3.540] [train_top1_acc 92.360] [train_top5_acc 99.360] [correct/total 46179/50000] [gate 0.0%] [tau 0.355] [beta_eff 0.515] [w_run 0.854]
+[2026-06-15 11:08:43,021] [val] [Epoch 77] [val_loss 1.098] [val_top1_acc 70.580] [val_top5_acc 92.080] [ECE 5.020] [AURC 100.851] [EAURC 52.554] [correct/total 7058/10000]
+[2026-06-15 11:09:21,608] [train] [Epoch 78] [EHSKD True] [lr 1.0e-01] [train_loss 3.602] [train_top1_acc 92.534] [train_top5_acc 99.388] [correct/total 46267/50000] [gate 0.0%] [tau 0.351] [beta_eff 0.515] [w_run 0.850]
+[2026-06-15 11:09:24,561] [val] [Epoch 78] [val_loss 1.032] [val_top1_acc 73.020] [val_top5_acc 93.050] [ECE 6.949] [AURC 86.516] [EAURC 46.305] [correct/total 7302/10000]
+[2026-06-15 11:10:03,091] [train] [Epoch 79] [EHSKD True] [lr 1.0e-01] [train_loss 3.549] [train_top1_acc 92.286] [train_top5_acc 99.362] [correct/total 46143/50000] [gate 0.0%] [tau 0.346] [beta_eff 0.515] [w_run 0.859]
+[2026-06-15 11:10:06,045] [val] [Epoch 79] [val_loss 1.006] [val_top1_acc 73.460] [val_top5_acc 93.290] [ECE 7.637] [AURC 81.405] [EAURC 42.564] [correct/total 7346/10000]
+[2026-06-15 11:10:06,058] [best] 
+###########################
+best:73.46
+###########################
+[2026-06-15 11:10:45,205] [train] [Epoch 80] [EHSKD True] [lr 1.0e-01] [train_loss 3.573] [train_top1_acc 92.718] [train_top5_acc 99.396] [correct/total 46361/50000] [gate 0.0%] [tau 0.342] [beta_eff 0.515] [w_run 0.868]
+[2026-06-15 11:10:48,954] [val] [Epoch 80] [val_loss 1.060] [val_top1_acc 72.540] [val_top5_acc 92.410] [ECE 5.947] [AURC 91.772] [EAURC 50.035] [correct/total 7254/10000]
+[2026-06-15 11:11:27,527] [train] [Epoch 81] [EHSKD True] [lr 1.0e-01] [train_loss 3.727] [train_top1_acc 92.018] [train_top5_acc 99.350] [correct/total 46008/50000] [gate 0.0%] [tau 0.337] [beta_eff 0.515] [w_run 0.849]
+[2026-06-15 11:11:30,470] [val] [Epoch 81] [val_loss 1.020] [val_top1_acc 73.780] [val_top5_acc 92.990] [ECE 7.313] [AURC 82.830] [EAURC 44.969] [correct/total 7378/10000]
+[2026-06-15 11:11:30,483] [best] 
+###########################
+best:73.78
+###########################
+[2026-06-15 11:12:09,317] [train] [Epoch 82] [EHSKD True] [lr 1.0e-01] [train_loss 3.616] [train_top1_acc 92.372] [train_top5_acc 99.416] [correct/total 46186/50000] [gate 0.0%] [tau 0.333] [beta_eff 0.515] [w_run 0.858]
+[2026-06-15 11:12:12,291] [val] [Epoch 82] [val_loss 1.042] [val_top1_acc 72.400] [val_top5_acc 92.810] [ECE 6.969] [AURC 91.081] [EAURC 48.893] [correct/total 7240/10000]
+[2026-06-15 11:12:51,143] [train] [Epoch 83] [EHSKD True] [lr 1.0e-01] [train_loss 3.675] [train_top1_acc 92.394] [train_top5_acc 99.402] [correct/total 46196/50000] [gate 0.0%] [tau 0.328] [beta_eff 0.515] [w_run 0.854]
+[2026-06-15 11:12:54,498] [val] [Epoch 83] [val_loss 1.058] [val_top1_acc 72.760] [val_top5_acc 92.610] [ECE 9.628] [AURC 86.704] [EAURC 45.670] [correct/total 7276/10000]
+[2026-06-15 11:13:33,253] [train] [Epoch 84] [EHSKD True] [lr 1.0e-01] [train_loss 3.677] [train_top1_acc 92.100] [train_top5_acc 99.390] [correct/total 46050/50000] [gate 0.0%] [tau 0.324] [beta_eff 0.515] [w_run 0.852]
+[2026-06-15 11:13:36,927] [val] [Epoch 84] [val_loss 1.037] [val_top1_acc 72.460] [val_top5_acc 92.920] [ECE 4.822] [AURC 88.458] [EAURC 46.464] [correct/total 7246/10000]
+[2026-06-15 11:14:15,517] [train] [Epoch 85] [EHSKD True] [lr 1.0e-01] [train_loss 3.623] [train_top1_acc 92.504] [train_top5_acc 99.382] [correct/total 46254/50000] [gate 0.0%] [tau 0.319] [beta_eff 0.515] [w_run 0.875]
+[2026-06-15 11:14:18,484] [val] [Epoch 85] [val_loss 1.029] [val_top1_acc 73.000] [val_top5_acc 92.420] [ECE 3.607] [AURC 84.058] [EAURC 43.784] [correct/total 7300/10000]
+[2026-06-15 11:14:57,104] [train] [Epoch 86] [EHSKD True] [lr 1.0e-01] [train_loss 3.724] [train_top1_acc 92.212] [train_top5_acc 99.378] [correct/total 46108/50000] [gate 0.0%] [tau 0.315] [beta_eff 0.515] [w_run 0.857]
+[2026-06-15 11:15:00,045] [val] [Epoch 86] [val_loss 1.054] [val_top1_acc 73.220] [val_top5_acc 92.660] [ECE 8.236] [AURC 88.063] [EAURC 48.478] [correct/total 7322/10000]
+[2026-06-15 11:15:38,564] [train] [Epoch 87] [EHSKD True] [lr 1.0e-01] [train_loss 3.839] [train_top1_acc 91.892] [train_top5_acc 99.386] [correct/total 45946/50000] [gate 0.0%] [tau 0.310] [beta_eff 0.515] [w_run 0.846]
+[2026-06-15 11:15:41,521] [val] [Epoch 87] [val_loss 1.049] [val_top1_acc 72.790] [val_top5_acc 92.470] [ECE 5.477] [AURC 87.533] [EAURC 46.594] [correct/total 7279/10000]
+[2026-06-15 11:16:20,231] [train] [Epoch 88] [EHSKD True] [lr 1.0e-01] [train_loss 3.764] [train_top1_acc 92.256] [train_top5_acc 99.364] [correct/total 46127/50000] [gate 0.0%] [tau 0.306] [beta_eff 0.515] [w_run 0.857]
+[2026-06-15 11:16:24,109] [val] [Epoch 88] [val_loss 1.095] [val_top1_acc 71.910] [val_top5_acc 92.250] [ECE 10.300] [AURC 90.313] [EAURC 46.525] [correct/total 7191/10000]
+[2026-06-15 11:17:02,753] [train] [Epoch 89] [EHSKD True] [lr 1.0e-01] [train_loss 3.835] [train_top1_acc 92.060] [train_top5_acc 99.336] [correct/total 46030/50000] [gate 0.0%] [tau 0.301] [beta_eff 0.515] [w_run 0.859]
+[2026-06-15 11:17:05,702] [val] [Epoch 89] [val_loss 1.033] [val_top1_acc 73.520] [val_top5_acc 92.910] [ECE 6.320] [AURC 87.723] [EAURC 49.066] [correct/total 7352/10000]
+[2026-06-15 11:17:44,542] [train] [Epoch 90] [EHSKD True] [lr 1.0e-01] [train_loss 3.938] [train_top1_acc 91.840] [train_top5_acc 99.308] [correct/total 45919/50000] [gate 0.0%] [tau 0.297] [beta_eff 0.515] [w_run 0.863]
+[2026-06-15 11:17:47,517] [val] [Epoch 90] [val_loss 1.084] [val_top1_acc 72.410] [val_top5_acc 92.580] [ECE 9.901] [AURC 90.850] [EAURC 48.694] [correct/total 7241/10000]
+[2026-06-15 11:18:26,212] [train] [Epoch 91] [EHSKD True] [lr 1.0e-01] [train_loss 3.962] [train_top1_acc 91.874] [train_top5_acc 99.318] [correct/total 45938/50000] [gate 0.0%] [tau 0.293] [beta_eff 0.515] [w_run 0.853]
+[2026-06-15 11:18:29,330] [val] [Epoch 91] [val_loss 1.043] [val_top1_acc 72.780] [val_top5_acc 92.740] [ECE 8.335] [AURC 86.741] [EAURC 45.771] [correct/total 7278/10000]
+[2026-06-15 11:19:08,117] [train] [Epoch 92] [EHSKD True] [lr 1.0e-01] [train_loss 3.844] [train_top1_acc 92.148] [train_top5_acc 99.296] [correct/total 46074/50000] [gate 0.0%] [tau 0.288] [beta_eff 0.515] [w_run 0.865]
+[2026-06-15 11:19:12,038] [val] [Epoch 92] [val_loss 1.070] [val_top1_acc 72.300] [val_top5_acc 92.590] [ECE 7.681] [AURC 94.879] [EAURC 52.368] [correct/total 7230/10000]
+[2026-06-15 11:19:50,555] [train] [Epoch 93] [EHSKD True] [lr 1.0e-01] [train_loss 3.928] [train_top1_acc 91.996] [train_top5_acc 99.322] [correct/total 45999/50000] [gate 0.0%] [tau 0.284] [beta_eff 0.515] [w_run 0.863]
+[2026-06-15 11:19:53,601] [val] [Epoch 93] [val_loss 1.061] [val_top1_acc 72.450] [val_top5_acc 92.710] [ECE 9.438] [AURC 88.200] [EAURC 46.173] [correct/total 7245/10000]
+[2026-06-15 11:20:32,642] [train] [Epoch 94] [EHSKD True] [lr 1.0e-01] [train_loss 3.837] [train_top1_acc 92.376] [train_top5_acc 99.352] [correct/total 46188/50000] [gate 0.0%] [tau 0.279] [beta_eff 0.515] [w_run 0.870]
+[2026-06-15 11:20:35,712] [val] [Epoch 94] [val_loss 1.053] [val_top1_acc 72.500] [val_top5_acc 92.570] [ECE 7.517] [AURC 87.594] [EAURC 45.729] [correct/total 7250/10000]
+[2026-06-15 11:21:14,870] [train] [Epoch 95] [EHSKD True] [lr 1.0e-01] [train_loss 3.737] [train_top1_acc 92.612] [train_top5_acc 99.416] [correct/total 46307/50000] [gate 0.0%] [tau 0.275] [beta_eff 0.515] [w_run 0.866]
+[2026-06-15 11:21:17,890] [val] [Epoch 95] [val_loss 1.037] [val_top1_acc 73.020] [val_top5_acc 92.860] [ECE 8.661] [AURC 87.357] [EAURC 47.145] [correct/total 7302/10000]
+[2026-06-15 11:21:56,785] [train] [Epoch 96] [EHSKD True] [lr 1.0e-01] [train_loss 3.888] [train_top1_acc 92.564] [train_top5_acc 99.428] [correct/total 46284/50000] [gate 0.0%] [tau 0.270] [beta_eff 0.515] [w_run 0.876]
+[2026-06-15 11:22:00,492] [val] [Epoch 96] [val_loss 1.048] [val_top1_acc 72.670] [val_top5_acc 92.600] [ECE 6.671] [AURC 87.991] [EAURC 46.670] [correct/total 7267/10000]
+[2026-06-15 11:22:39,239] [train] [Epoch 97] [EHSKD True] [lr 1.0e-01] [train_loss 3.905] [train_top1_acc 92.250] [train_top5_acc 99.274] [correct/total 46126/50000] [gate 0.0%] [tau 0.266] [beta_eff 0.515] [w_run 0.867]
+[2026-06-15 11:22:42,543] [val] [Epoch 97] [val_loss 1.062] [val_top1_acc 73.180] [val_top5_acc 92.300] [ECE 8.394] [AURC 86.500] [EAURC 46.789] [correct/total 7318/10000]
+[2026-06-15 11:23:21,188] [train] [Epoch 98] [EHSKD True] [lr 1.0e-01] [train_loss 3.863] [train_top1_acc 92.292] [train_top5_acc 99.360] [correct/total 46146/50000] [gate 0.0%] [tau 0.261] [beta_eff 0.515] [w_run 0.879]
+[2026-06-15 11:23:24,267] [val] [Epoch 98] [val_loss 1.063] [val_top1_acc 72.590] [val_top5_acc 92.140] [ECE 2.871] [AURC 94.529] [EAURC 52.952] [correct/total 7259/10000]
+[2026-06-15 11:24:02,884] [train] [Epoch 99] [EHSKD True] [lr 1.0e-01] [train_loss 4.096] [train_top1_acc 91.892] [train_top5_acc 99.264] [correct/total 45944/50000] [gate 0.0%] [tau 0.257] [beta_eff 0.515] [w_run 0.871]
+[2026-06-15 11:24:05,831] [val] [Epoch 99] [val_loss 1.093] [val_top1_acc 72.890] [val_top5_acc 92.180] [ECE 8.682] [AURC 91.059] [EAURC 50.437] [correct/total 7289/10000]
+[2026-06-15 11:24:44,697] [train] [Epoch 100] [EHSKD True] [lr 1.0e-02] [train_loss 3.165] [train_top1_acc 95.144] [train_top5_acc 99.718] [correct/total 47572/50000] [gate 0.0%] [tau 0.252] [beta_eff 0.515] [w_run 0.920]
+[2026-06-15 11:24:48,586] [val] [Epoch 100] [val_loss 0.885] [val_top1_acc 76.610] [val_top5_acc 94.100] [ECE 1.884] [AURC 65.296] [EAURC 35.506] [correct/total 7661/10000]
+[2026-06-15 11:24:48,600] [best] 
+###########################
+best:76.61
+###########################
+[2026-06-15 11:25:27,777] [train] [Epoch 101] [EHSKD True] [lr 1.0e-02] [train_loss 2.364] [train_top1_acc 96.432] [train_top5_acc 99.790] [correct/total 48216/50000] [gate 0.0%] [tau 0.248] [beta_eff 0.515] [w_run 0.936]
+[2026-06-15 11:25:30,735] [val] [Epoch 101] [val_loss 0.858] [val_top1_acc 77.610] [val_top5_acc 94.500] [ECE 7.013] [AURC 61.018] [EAURC 33.828] [correct/total 7761/10000]
+[2026-06-15 11:25:30,748] [best] 
+###########################
+best:77.61
+###########################
+[2026-06-15 11:26:10,057] [train] [Epoch 102] [EHSKD True] [lr 1.0e-02] [train_loss 2.182] [train_top1_acc 96.904] [train_top5_acc 99.818] [correct/total 48452/50000] [gate 0.0%] [tau 0.243] [beta_eff 0.515] [w_run 0.936]
+[2026-06-15 11:26:13,163] [val] [Epoch 102] [val_loss 0.853] [val_top1_acc 77.210] [val_top5_acc 94.420] [ECE 3.377] [AURC 62.657] [EAURC 34.443] [correct/total 7721/10000]
+[2026-06-15 11:26:51,971] [train] [Epoch 103] [EHSKD True] [lr 1.0e-02] [train_loss 2.158] [train_top1_acc 97.170] [train_top5_acc 99.854] [correct/total 48586/50000] [gate 0.0%] [tau 0.239] [beta_eff 0.515] [w_run 0.940]
+[2026-06-15 11:26:55,846] [val] [Epoch 103] [val_loss 0.855] [val_top1_acc 77.290] [val_top5_acc 94.340] [ECE 2.727] [AURC 62.442] [EAURC 34.434] [correct/total 7729/10000]
+[2026-06-15 11:27:34,601] [train] [Epoch 104] [EHSKD True] [lr 1.0e-02] [train_loss 1.965] [train_top1_acc 97.406] [train_top5_acc 99.854] [correct/total 48702/50000] [gate 0.0%] [tau 0.234] [beta_eff 0.515] [w_run 0.943]
+[2026-06-15 11:27:37,593] [val] [Epoch 104] [val_loss 0.845] [val_top1_acc 77.800] [val_top5_acc 94.550] [ECE 4.868] [AURC 61.027] [EAURC 34.316] [correct/total 7780/10000]
+[2026-06-15 11:27:37,606] [best] 
+###########################
+best:77.8
+###########################
+[2026-06-15 11:28:16,554] [train] [Epoch 105] [EHSKD True] [lr 1.0e-02] [train_loss 1.897] [train_top1_acc 97.656] [train_top5_acc 99.868] [correct/total 48828/50000] [gate 0.0%] [tau 0.230] [beta_eff 0.515] [w_run 0.943]
+[2026-06-15 11:28:19,562] [val] [Epoch 105] [val_loss 0.839] [val_top1_acc 77.900] [val_top5_acc 94.650] [ECE 5.174] [AURC 59.599] [EAURC 33.139] [correct/total 7790/10000]
+[2026-06-15 11:28:19,582] [best] 
+###########################
+best:77.9
+###########################
+[2026-06-15 11:28:58,479] [train] [Epoch 106] [EHSKD True] [lr 1.0e-02] [train_loss 1.984] [train_top1_acc 97.840] [train_top5_acc 99.876] [correct/total 48920/50000] [gate 0.0%] [tau 0.225] [beta_eff 0.515] [w_run 0.947]
+[2026-06-15 11:29:01,947] [val] [Epoch 106] [val_loss 0.839] [val_top1_acc 77.850] [val_top5_acc 94.600] [ECE 5.042] [AURC 59.353] [EAURC 32.768] [correct/total 7785/10000]
+[2026-06-15 11:29:40,867] [train] [Epoch 107] [EHSKD True] [lr 1.0e-02] [train_loss 1.877] [train_top1_acc 97.972] [train_top5_acc 99.880] [correct/total 48986/50000] [gate 0.0%] [tau 0.221] [beta_eff 0.515] [w_run 0.954]
+[2026-06-15 11:29:44,080] [val] [Epoch 107] [val_loss 0.850] [val_top1_acc 77.630] [val_top5_acc 94.300] [ECE 2.122] [AURC 61.433] [EAURC 34.293] [correct/total 7763/10000]
+[2026-06-15 11:30:22,970] [train] [Epoch 108] [EHSKD True] [lr 1.0e-02] [train_loss 1.983] [train_top1_acc 98.086] [train_top5_acc 99.916] [correct/total 49042/50000] [gate 0.0%] [tau 0.216] [beta_eff 0.515] [w_run 0.955]
+[2026-06-15 11:30:25,991] [val] [Epoch 108] [val_loss 0.844] [val_top1_acc 77.960] [val_top5_acc 94.500] [ECE 3.170] [AURC 60.209] [EAURC 33.899] [correct/total 7796/10000]
+[2026-06-15 11:30:26,005] [best] 
+###########################
+best:77.96
+###########################
+[2026-06-15 11:31:04,978] [train] [Epoch 109] [EHSKD True] [lr 1.0e-02] [train_loss 1.899] [train_top1_acc 98.184] [train_top5_acc 99.916] [correct/total 49092/50000] [gate 0.0%] [tau 0.212] [beta_eff 0.515] [w_run 0.953]
+[2026-06-15 11:31:08,124] [val] [Epoch 109] [val_loss 0.831] [val_top1_acc 78.330] [val_top5_acc 94.830] [ECE 5.742] [AURC 58.298] [EAURC 32.900] [correct/total 7833/10000]
+[2026-06-15 11:31:08,148] [best] 
+###########################
+best:78.33
+###########################
+[2026-06-15 11:31:47,641] [train] [Epoch 110] [EHSKD True] [lr 1.0e-02] [train_loss 1.953] [train_top1_acc 98.258] [train_top5_acc 99.910] [correct/total 49132/50000] [gate 0.0%] [tau 0.207] [beta_eff 0.515] [w_run 0.954]
+[2026-06-15 11:31:50,985] [val] [Epoch 110] [val_loss 0.841] [val_top1_acc 77.930] [val_top5_acc 94.560] [ECE 2.589] [AURC 59.635] [EAURC 33.250] [correct/total 7793/10000]
+[2026-06-15 11:32:29,789] [train] [Epoch 111] [EHSKD True] [lr 1.0e-02] [train_loss 1.928] [train_top1_acc 98.410] [train_top5_acc 99.922] [correct/total 49205/50000] [gate 0.0%] [tau 0.203] [beta_eff 0.515] [w_run 0.956]
+[2026-06-15 11:32:32,828] [val] [Epoch 111] [val_loss 0.853] [val_top1_acc 77.700] [val_top5_acc 94.380] [ECE 1.793] [AURC 61.187] [EAURC 34.225] [correct/total 7770/10000]
+[2026-06-15 11:33:11,485] [train] [Epoch 112] [EHSKD True] [lr 1.0e-02] [train_loss 1.861] [train_top1_acc 98.522] [train_top5_acc 99.912] [correct/total 49262/50000] [gate 0.0%] [tau 0.199] [beta_eff 0.515] [w_run 0.953]
+[2026-06-15 11:33:14,543] [val] [Epoch 112] [val_loss 0.839] [val_top1_acc 78.000] [val_top5_acc 94.420] [ECE 3.022] [AURC 60.379] [EAURC 34.168] [correct/total 7800/10000]
+[2026-06-15 11:33:53,360] [train] [Epoch 113] [EHSKD True] [lr 1.0e-02] [train_loss 1.902] [train_top1_acc 98.536] [train_top5_acc 99.940] [correct/total 49268/50000] [gate 0.0%] [tau 0.194] [beta_eff 0.515] [w_run 0.957]
+[2026-06-15 11:33:57,030] [val] [Epoch 113] [val_loss 0.844] [val_top1_acc 77.970] [val_top5_acc 94.480] [ECE 2.300] [AURC 61.237] [EAURC 34.951] [correct/total 7797/10000]
+[2026-06-15 11:34:35,727] [train] [Epoch 114] [EHSKD True] [lr 1.0e-02] [train_loss 1.924] [train_top1_acc 98.634] [train_top5_acc 99.930] [correct/total 49317/50000] [gate 0.0%] [tau 0.190] [beta_eff 0.515] [w_run 0.962]
+[2026-06-15 11:34:38,889] [val] [Epoch 114] [val_loss 0.853] [val_top1_acc 77.790] [val_top5_acc 94.450] [ECE 2.010] [AURC 61.660] [EAURC 34.924] [correct/total 7779/10000]
+[2026-06-15 11:35:17,559] [train] [Epoch 115] [EHSKD True] [lr 1.0e-02] [train_loss 1.892] [train_top1_acc 98.622] [train_top5_acc 99.924] [correct/total 49311/50000] [gate 0.0%] [tau 0.185] [beta_eff 0.515] [w_run 0.959]
+[2026-06-15 11:35:20,578] [val] [Epoch 115] [val_loss 0.839] [val_top1_acc 78.220] [val_top5_acc 94.770] [ECE 6.090] [AURC 59.140] [EAURC 33.472] [correct/total 7822/10000]
+[2026-06-15 11:35:59,293] [train] [Epoch 116] [EHSKD True] [lr 1.0e-02] [train_loss 1.775] [train_top1_acc 98.652] [train_top5_acc 99.952] [correct/total 49326/50000] [gate 0.0%] [tau 0.181] [beta_eff 0.515] [w_run 0.964]
+[2026-06-15 11:36:03,154] [val] [Epoch 116] [val_loss 0.834] [val_top1_acc 78.450] [val_top5_acc 94.730] [ECE 4.116] [AURC 59.235] [EAURC 34.129] [correct/total 7845/10000]
+[2026-06-15 11:36:03,169] [best] 
+###########################
+best:78.45
+###########################
+[2026-06-15 11:36:42,093] [train] [Epoch 117] [EHSKD True] [lr 1.0e-02] [train_loss 1.902] [train_top1_acc 98.754] [train_top5_acc 99.922] [correct/total 49375/50000] [gate 0.0%] [tau 0.176] [beta_eff 0.515] [w_run 0.958]
+[2026-06-15 11:36:45,133] [val] [Epoch 117] [val_loss 0.858] [val_top1_acc 77.740] [val_top5_acc 94.380] [ECE 2.395] [AURC 61.850] [EAURC 34.988] [correct/total 7774/10000]
+[2026-06-15 11:37:23,877] [train] [Epoch 118] [EHSKD True] [lr 1.0e-02] [train_loss 1.805] [train_top1_acc 98.846] [train_top5_acc 99.944] [correct/total 49424/50000] [gate 0.0%] [tau 0.172] [beta_eff 0.515] [w_run 0.964]
+[2026-06-15 11:37:26,857] [val] [Epoch 118] [val_loss 0.840] [val_top1_acc 77.980] [val_top5_acc 94.610] [ECE 3.172] [AURC 59.850] [EAURC 33.589] [correct/total 7798/10000]
+[2026-06-15 11:38:05,493] [train] [Epoch 119] [EHSKD True] [lr 1.0e-02] [train_loss 1.825] [train_top1_acc 98.848] [train_top5_acc 99.944] [correct/total 49423/50000] [gate 0.0%] [tau 0.167] [beta_eff 0.515] [w_run 0.964]
+[2026-06-15 11:38:09,266] [val] [Epoch 119] [val_loss 0.829] [val_top1_acc 78.140] [val_top5_acc 94.820] [ECE 5.506] [AURC 57.769] [EAURC 31.904] [correct/total 7814/10000]
+[2026-06-15 11:38:48,108] [train] [Epoch 120] [EHSKD True] [lr 1.0e-02] [train_loss 1.926] [train_top1_acc 98.952] [train_top5_acc 99.950] [correct/total 49476/50000] [gate 0.0%] [tau 0.163] [beta_eff 0.515] [w_run 0.962]
+[2026-06-15 11:38:51,192] [val] [Epoch 120] [val_loss 0.855] [val_top1_acc 77.940] [val_top5_acc 94.320] [ECE 2.079] [AURC 61.216] [EAURC 34.856] [correct/total 7794/10000]
+[2026-06-15 11:39:29,889] [train] [Epoch 121] [EHSKD True] [lr 1.0e-02] [train_loss 1.783] [train_top1_acc 98.946] [train_top5_acc 99.950] [correct/total 49472/50000] [gate 0.0%] [tau 0.158] [beta_eff 0.515] [w_run 0.967]
+[2026-06-15 11:39:32,899] [val] [Epoch 121] [val_loss 0.836] [val_top1_acc 78.350] [val_top5_acc 94.520] [ECE 3.535] [AURC 59.575] [EAURC 34.226] [correct/total 7835/10000]
+[2026-06-15 11:40:11,579] [train] [Epoch 122] [EHSKD True] [lr 1.0e-02] [train_loss 1.763] [train_top1_acc 98.976] [train_top5_acc 99.950] [correct/total 49488/50000] [gate 0.0%] [tau 0.154] [beta_eff 0.515] [w_run 0.972]
+[2026-06-15 11:40:15,019] [val] [Epoch 122] [val_loss 0.831] [val_top1_acc 78.310] [val_top5_acc 94.710] [ECE 3.564] [AURC 58.710] [EAURC 33.263] [correct/total 7831/10000]
+[2026-06-15 11:40:53,914] [train] [Epoch 123] [EHSKD True] [lr 1.0e-02] [train_loss 1.798] [train_top1_acc 99.094] [train_top5_acc 99.954] [correct/total 49547/50000] [gate 0.0%] [tau 0.149] [beta_eff 0.515] [w_run 0.970]
+[2026-06-15 11:40:57,234] [val] [Epoch 123] [val_loss 0.853] [val_top1_acc 77.990] [val_top5_acc 94.460] [ECE 2.177] [AURC 61.633] [EAURC 35.397] [correct/total 7799/10000]
+[2026-06-15 11:41:35,986] [train] [Epoch 124] [EHSKD True] [lr 1.0e-02] [train_loss 1.832] [train_top1_acc 99.094] [train_top5_acc 99.966] [correct/total 49547/50000] [gate 0.0%] [tau 0.145] [beta_eff 0.515] [w_run 0.970]
+[2026-06-15 11:41:38,980] [val] [Epoch 124] [val_loss 0.832] [val_top1_acc 78.210] [val_top5_acc 94.760] [ECE 5.955] [AURC 57.987] [EAURC 32.295] [correct/total 7821/10000]
+[2026-06-15 11:42:17,751] [train] [Epoch 125] [EHSKD True] [lr 1.0e-02] [train_loss 1.807] [train_top1_acc 99.124] [train_top5_acc 99.960] [correct/total 49562/50000] [gate 0.0%] [tau 0.140] [beta_eff 0.515] [w_run 0.969]
+[2026-06-15 11:42:20,920] [val] [Epoch 125] [val_loss 0.839] [val_top1_acc 78.000] [val_top5_acc 94.710] [ECE 6.358] [AURC 58.547] [EAURC 32.336] [correct/total 7800/10000]
+[2026-06-15 11:42:59,964] [train] [Epoch 126] [EHSKD True] [lr 1.0e-02] [train_loss 1.747] [train_top1_acc 99.166] [train_top5_acc 99.964] [correct/total 49583/50000] [gate 0.0%] [tau 0.136] [beta_eff 0.515] [w_run 0.973]
+[2026-06-15 11:43:03,348] [val] [Epoch 126] [val_loss 0.880] [val_top1_acc 77.830] [val_top5_acc 94.130] [ECE 2.451] [AURC 63.626] [EAURC 36.990] [correct/total 7783/10000]
+[2026-06-15 11:43:42,076] [train] [Epoch 127] [EHSKD True] [lr 1.0e-02] [train_loss 1.711] [train_top1_acc 99.180] [train_top5_acc 99.970] [correct/total 49590/50000] [gate 0.0%] [tau 0.131] [beta_eff 0.515] [w_run 0.972]
+[2026-06-15 11:43:45,148] [val] [Epoch 127] [val_loss 0.834] [val_top1_acc 78.410] [val_top5_acc 94.710] [ECE 2.596] [AURC 58.977] [EAURC 33.774] [correct/total 7841/10000]
+[2026-06-15 11:44:24,000] [train] [Epoch 128] [EHSKD True] [lr 1.0e-02] [train_loss 1.747] [train_top1_acc 99.180] [train_top5_acc 99.978] [correct/total 49589/50000] [gate 0.0%] [tau 0.127] [beta_eff 0.515] [w_run 0.974]
+[2026-06-15 11:44:27,042] [val] [Epoch 128] [val_loss 0.832] [val_top1_acc 78.450] [val_top5_acc 94.600] [ECE 3.660] [AURC 59.616] [EAURC 34.510] [correct/total 7845/10000]
+[2026-06-15 11:45:05,705] [train] [Epoch 129] [EHSKD True] [lr 1.0e-02] [train_loss 1.694] [train_top1_acc 99.240] [train_top5_acc 99.968] [correct/total 49621/50000] [gate 0.0%] [tau 0.122] [beta_eff 0.515] [w_run 0.973]
+[2026-06-15 11:45:09,609] [val] [Epoch 129] [val_loss 0.837] [val_top1_acc 78.630] [val_top5_acc 94.600] [ECE 5.561] [AURC 57.941] [EAURC 33.270] [correct/total 7863/10000]
+[2026-06-15 11:45:09,631] [best] 
+###########################
+best:78.63
+###########################
+[2026-06-15 11:45:48,742] [train] [Epoch 130] [EHSKD True] [lr 1.0e-02] [train_loss 1.778] [train_top1_acc 99.218] [train_top5_acc 99.976] [correct/total 49608/50000] [gate 0.0%] [tau 0.118] [beta_eff 0.515] [w_run 0.974]
+[2026-06-15 11:45:51,902] [val] [Epoch 130] [val_loss 0.845] [val_top1_acc 78.070] [val_top5_acc 94.340] [ECE 2.351] [AURC 60.481] [EAURC 34.444] [correct/total 7807/10000]
+[2026-06-15 11:46:30,665] [train] [Epoch 131] [EHSKD True] [lr 1.0e-02] [train_loss 1.837] [train_top1_acc 99.214] [train_top5_acc 99.974] [correct/total 49607/50000] [gate 0.0%] [tau 0.113] [beta_eff 0.515] [w_run 0.972]
+[2026-06-15 11:46:33,747] [val] [Epoch 131] [val_loss 0.831] [val_top1_acc 78.480] [val_top5_acc 94.740] [ECE 6.113] [AURC 57.300] [EAURC 32.267] [correct/total 7848/10000]
+[2026-06-15 11:47:12,524] [train] [Epoch 132] [EHSKD True] [lr 1.0e-02] [train_loss 1.827] [train_top1_acc 99.238] [train_top5_acc 99.972] [correct/total 49619/50000] [gate 0.0%] [tau 0.109] [beta_eff 0.515] [w_run 0.975]
+[2026-06-15 11:47:16,387] [val] [Epoch 132] [val_loss 0.847] [val_top1_acc 77.840] [val_top5_acc 94.420] [ECE 5.994] [AURC 58.871] [EAURC 32.261] [correct/total 7784/10000]
+[2026-06-15 11:47:55,145] [train] [Epoch 133] [EHSKD True] [lr 1.0e-02] [train_loss 1.788] [train_top1_acc 99.286] [train_top5_acc 99.982] [correct/total 49643/50000] [gate 0.0%] [tau 0.104] [beta_eff 0.515] [w_run 0.974]
+[2026-06-15 11:47:58,196] [val] [Epoch 133] [val_loss 0.835] [val_top1_acc 78.390] [val_top5_acc 94.390] [ECE 3.488] [AURC 58.559] [EAURC 33.307] [correct/total 7839/10000]
+[2026-06-15 11:48:36,864] [train] [Epoch 134] [EHSKD True] [lr 1.0e-02] [train_loss 1.696] [train_top1_acc 99.318] [train_top5_acc 99.982] [correct/total 49659/50000] [gate 0.0%] [tau 0.100] [beta_eff 0.515] [w_run 0.973]
+[2026-06-15 11:48:39,862] [val] [Epoch 134] [val_loss 0.832] [val_top1_acc 78.580] [val_top5_acc 94.860] [ECE 6.315] [AURC 57.018] [EAURC 32.226] [correct/total 7858/10000]
